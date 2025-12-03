@@ -28,10 +28,30 @@ cur.executescript ("""
         num_seasons INTEGER,
         metascore INTEGER,
         metascore_count INTEGER,
-        metascore_sentiment TEXT,
         userscore INTEGER,
         userscore_count INTEGER,
-        userscore_sentiment TEXT
+
+        metascore_sentiment TEXT GENERATED ALWAYS AS (
+            CASE 
+                WHEN metascore IS NULL THEN 'No score'
+                WHEN metascore >= 81 THEN 'Universal acclaim'
+                WHEN metascore >= 61 THEN 'Generally favorable'
+                WHEN metascore >= 40 THEN 'Mixed or average'
+                WHEN metascore >= 20 THEN 'Generally unfavorable'
+                ELSE 'Overwhelming dislike'
+            END
+        ) VIRTUAL,
+            
+        userscore_sentiment TEXT GENERATED ALWAYS AS (
+            CASE 
+                WHEN userscore IS NULL THEN 'No score'
+                WHEN userscore >= 81 THEN 'Universal acclaim'
+                WHEN userscore >= 61 THEN 'Generally favorable'
+                WHEN userscore >= 40 THEN 'Mixed or average'
+                WHEN userscore >= 20 THEN 'Generally unfavorable'
+                ELSE 'Overwhelming dislike'
+            END
+        ) VIRTUAL
     );
 
     CREATE TABLE genre (
@@ -90,14 +110,14 @@ conn.commit()
 # Assign values to the table "show"
 show_columns = [
     "id", "title", "releaseDate", "rating", "duration", "tagline",
-    "num_seasons", "metascore", "metascore_count", "metascore_sentiment",
-    "userscore", "userscore_count", "userscore_sentiment"
+    "num_seasons", "metascore", "metascore_count",
+    "userscore", "userscore_count"
 ]
 
 df[[
     "id", "title", "releaseDate", "rating", "duration", "tagline","description",
-    "num_seasons", "metascore", "metascore_count", "metascore_sentiment",
-    "userscore", "userscore_count", "userscore_sentiment"
+    "num_seasons", "metascore", "metascore_count",
+    "userscore", "userscore_count"
 ]].to_sql("show", conn, if_exists="append", index=False)
 
 # Assign values to the table "genre"
