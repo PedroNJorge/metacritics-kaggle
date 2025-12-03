@@ -101,15 +101,16 @@ df[[
 ]].to_sql("show", conn, if_exists="append", index=False)
 
 # Assign values to the table "genre"
-all_genres = (
-    df["genres"].str.split(",").explode()
-    .str.strip()
-    .unique()
-)
-
-for g in all_genres:
-    if g:
-        cur.execute("INSERT OR IGNORE INTO genre (genre_name) VALUES (?)", (g,))
+for _, row in df.iterrows():
+    show_id = row["id"]
+    genres = str(row["genres"]).split(",") if pd.notna(row["genres"]) else []
+    for genre_name in genres:
+        genre_name = genre_name.strip()
+        if genre_name:
+            cur.execute(
+                "INSERT INTO genre (show_id, genre_name) VALUES (?, ?)",
+                (show_id, genre_name)
+            )
 conn.commit()
 
 # Assign values to the table "productionCompany"
@@ -121,6 +122,26 @@ all_companies = (
 
 for c in all_companies:
     cur.execute("INSERT OR IGNORE INTO productionCompany (company) VALUES (?)", (c,))
+conn.commit()
+
+# Assing values to the table "producedBy"
+def producer_id(company_name):
+    cur.execute("SELECT id FROM productionCompany WHERE company = ?", (company_name,))
+    row = cur.fetchone()
+    return row[0] if row else None
+
+for _, row in df.iterrows():
+    show_id = row["id"]
+    companies = str(row["production_companies"]).split(",") if pd.notna(row["production_companies"]) else []
+    for company_name in companies:
+        company_name = company_name.strip()
+        if company_name:
+            prod_id = producer_id(company_name)
+            if prod_id:
+                cur.execute(
+                    "INSERT INTO producedBy (show_id, producer_id) VALUES (?, ?)",
+                    (show_id, prod_id)
+                )
 conn.commit()
 
 # Assign values to the table "person" and their respective roles
