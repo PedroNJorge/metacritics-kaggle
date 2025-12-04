@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TV Shows</title>
+    <title>TV Shows Metacritcs</title>
 </head>
 <body>
-    <h1>TV Shows</h1>
-    <ul>
-    {% for show in shows %}
-        <li>{{ show.title }}</li>
-    {% endfor %}
-    </ul>
+    <header>
+        <h1></h1>
+        <nav>
+            <a href="/">Home</a>
+        </nav>
+    </header>
+    <main>
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
 </body>
 </html>

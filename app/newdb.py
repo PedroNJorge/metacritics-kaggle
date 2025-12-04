@@ -10,7 +10,7 @@ cur.executescript ("""
     DROP TABLE IF EXISTS show;
     DROP TABLE IF EXISTS genre;
     DROP TABLE IF EXISTS person;
-    DROP TABLE IF EXISTS acted;
+    DROP TABLE IF EXISTS acted;c
     DROP TABLE IF EXISTS directed;
     DROP TABLE IF EXISTS created;
     DROP TABLE IF EXISTS wrote;

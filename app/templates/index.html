@@ -1,17 +1,27 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
-<!-- 
-  Conteúdo apenas simples para começar. 
- 
-  Veja aplicação fazendo interface à MovieStream para exemplos concretos.
--->
+<h2>About</h2>
+<p>This web application illustrates the use of the International Football Results
+database. The application is built using 
+<a href="https://docs.python.org/3/library/sqlite3.html">sqlite3</a>,
+<a href="https://flask.palletsprojects.com">Flask</a>, and
+<a href="https://jinja.palletsprojects.com">Jinja</a>.
+</p>
 
-<h1>{{ message }}</h1>
-
-<h2> ... and hello again</h2>
-
-This is the entry page for the application!
+<h2>Some database statistics</h2>
+<table>
+<tr>
+  <th>Items</th>
+  <th>Count</th>
+</tr>
+<tr>
+  <td>Shows</td>
+  <td>{{ stats.Shows }}</td>
+</tr>
+<tr>
+  <td>People</td>
+  <td>{{ stats.People }}</td>
+</tr>
 
 {% endblock %}

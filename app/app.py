@@ -9,8 +9,12 @@ APP = Flask(__name__)
 # Start page
 @APP.route('/')
 def index():
-    info = {}
+    stats = {}
     stats = db.execute ('''
         SELECT * FROM 
-            (SELECT COUNT(*) FROM SHOWS)
-    ''')
+            (SELECT COUNT(*) AS Shows FROM show)
+        JOIN
+            (SELECT COUNT(*) AS People FROM person)
+    ''').fetchone()
+    logging.info(stats)
+    return render_template('index.html', stats = stats)
