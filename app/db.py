@@ -4,7 +4,7 @@ import re
 
 global DB, DB_FILE
 
-DB_FILE = 'tv_shows.db'
+DB_FILE = 'tvshows.db'
 
 DB = dict()
 

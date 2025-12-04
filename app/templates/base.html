@@ -1,9 +1,14 @@
-<!doctype html>
-<title>Flask application</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-  <a href="/">Home</a>
-</nav>
-<section class="content">
-  {% block content %}{% endblock %}
-</section>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TV Shows</title>
+</head>
+<body>
+    <h1>TV Shows</h1>
+    <ul>
+    {% for show in shows %}
+        <li>{{ show.title }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
