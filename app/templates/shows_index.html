@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>TV Shows & Movies Database</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Database Stats</h5>
+                <p>Total Shows: <strong>{{ stats.total_shows }}</strong></p>
+                <p>Average Metascore: <strong>{{ "%.1f"|format(stats.avg_metascore) }}</strong></p>
+                <p>Average User Score: <strong>{{ "%.1f"|format(stats.avg_userscore) }}</strong></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <h3>Explore Show Data</h3>
+        <div class="list-group">
+            <a href="/shows/top-discrepancies" class="list-group-item list-group-item-action">
+                <h5>Biggest Critic-User Score Gaps</h5>
+                <p class="mb-1">Shows where critics and users disagree the most</p>
+            </a>
+            <a href="/shows/highest-rated" class="list-group-item list-group-item-action">
+                <h5>Highest Rated Shows</h5>
+                <p class="mb-1">Top shows by critic scores</p>
+            </a>
+            <a href="/shows/most-popular" class="list-group-item list-group-item-action">
+                <h5>Most Popular Shows</h5>
+                <p class="mb-1">Shows with the most user reviews</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-4">Sample Shows</h4>
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <th>Metascore</th>
+        <th>User Score</th>
+    </tr>
+    {% for show in sample_shows %}
+    <tr>
+        <td>{{ show.title }}</td>
+        <td>{{ show.metascore }}</td>
+        <td>{{ show.userscore }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
