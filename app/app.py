@@ -68,8 +68,8 @@ def search():
                                            total = total)
 
 # Navigation through all shows
-@APP.route('/shows')
-def shows():
+@APP.route('/show/')
+def show():
     page = request.args.get('page', 1, type = int)
     per_page = 20
     offset = (page - 1) * per_page
@@ -80,19 +80,18 @@ def shows():
     total = count_result['total']
 
     shows_list = db.execute('''
-        SELECT id, title, releaseDate, rating, duration, tagline,
-                description, num_seasons, metascore, metascore_count,
-                userscocre, userscore_count
+        SELECT *
         FROM show
         ORDER BY title
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
     total_pages = (total + per_page - 1) // per_page
 
-    return render_template('shows_list.html', shows = shows_list,
+    return render_template('show.html', shows = shows_list,
                                               page = page,
                                               total_pages = total_pages,
                                               total = total)
+
 # Show info
 @APP.route('/show/<int:show_id>')
 def show_detail(show_id):
@@ -121,7 +120,7 @@ def show_detail(show_id):
 
     # Get actors
     actors = db.execute('''
-        SELECT p.name
+        SELECT p.name, p.id
         FROM person p
         JOIN acted a ON p.id = a.person_id
         WHERE a.show_id = ?
@@ -129,7 +128,7 @@ def show_detail(show_id):
 
     # Get writers
     writers = db.execute('''
-        SELECT p.name
+        SELECT p.name, p.id
         FROM person p
         JOIN wrote w ON p.id = w.person_id
         WHERE w.show_id = ?
@@ -137,7 +136,7 @@ def show_detail(show_id):
 
     # Get directors
     directors = db.execute('''
-        SELECT p.name
+        SELECT p.name, p.id
         FROM person p
         JOIN directed d ON p.id = d.person_id
         WHERE d.show_id = ?
@@ -159,6 +158,39 @@ def show_detail(show_id):
                                                directors = directors,
                                                creators = creators)
 
+# Navigation through all shows
+@APP.route('/person/')
+def person():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM person
+    ''').fetchone()
+    total = count_result['total']
+
+    people_list = db.execute('''
+        SELECT p.*,
+            COUNT(DISTINCT a.show_id) as acted_count,
+            COUNT(DISTINCT d.show_id) as directed_count,
+            COUNT(DISTINCT w.show_id) as wrote_count,
+            COUNT(DISTINCT c.show_id) as created_count
+        FROM person p
+        LEFT JOIN acted a ON p.id = a.person_id
+        LEFT JOIN directed d ON p.id = d.person_id
+        LEFT JOIN wrote w ON p.id = w.person_id
+        LEFT JOIN created c ON p.id = c.person_id
+        GROUP BY p.id, p.name
+        ORDER BY p.name
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('person.html', people = people_list,
+                                              page = page,
+                                              total_pages = total_pages,
+                                              total = total)
 # Person info
 @APP.route('/person/<int:person_id>')
 def person_detail(person_id):
@@ -167,46 +199,79 @@ def person_detail(person_id):
         FROM person
         WHERE id = ?
     ''', (person_id,)).fetchone()
+    
     if not person:
         return "Person not found", 404
     
-    # Acted in
+    # Acted in (with scores)
     acted_shows = db.execute('''
-        SELECT show.title
+        SELECT show.id, show.title, show.releaseDate, 
+               show.metascore, show.userscore
         FROM show
-        JOIN acted on show.id = acted.show_id
+        JOIN acted ON show.id = acted.show_id
         WHERE acted.person_id = ?
-    ''', (person_id, )).fetchall()
+        ORDER BY show.releaseDate DESC, show.title
+    ''', (person_id,)).fetchall()
 
-    # Wrote
+    # Wrote (with scores)
     written_shows = db.execute('''
-        SELECT show.title
+        SELECT show.id, show.title, show.releaseDate,
+               show.metascore, show.userscore
         FROM show
-        JOIN wrote on show.id = wrote.show_id
+        JOIN wrote ON show.id = wrote.show_id
         WHERE wrote.person_id = ?
-    ''', (person_id, )).fetchall()
+        ORDER BY show.releaseDate DESC, show.title
+    ''', (person_id,)).fetchall()
 
-    # Directed
+    # Directed (with scores)
     directed_shows = db.execute('''
-        SELECT show.title
+        SELECT show.id, show.title, show.releaseDate,
+               show.metascore, show.userscore
         FROM show
-        JOIN directed on show.id = directed.show_id
+        JOIN directed ON show.id = directed.show_id
         WHERE directed.person_id = ?
-    ''', (person_id, )).fetchall()
+        ORDER BY show.releaseDate DESC, show.title
+    ''', (person_id,)).fetchall()
 
-    # Created
+    # Created (with scores)
     created_shows = db.execute('''
-        SELECT show.title
+        SELECT show.id, show.title, show.releaseDate,
+               show.metascore, show.userscore
         FROM show
-        JOIN created on show.id = created.show_id
+        JOIN created ON show.id = created.show_id
         WHERE created.person_id = ?
-    ''', (person_id, )).fetchall()
+        ORDER BY show.releaseDate DESC, show.title
+    ''', (person_id,)).fetchall()
 
-    return render_template('person_detail.html', person = person,
-                                                 acted_shows = acted_shows,
-                                                 written_shows = written_shows,
-                                                 directed_shows = directed_shows,
-                                                 created_shows = created_shows)
+    # Get average scores
+    stats = db.execute('''
+        SELECT 
+            COUNT(DISTINCT a.show_id) as acted_total,
+            COUNT(DISTINCT d.show_id) as directed_total,
+            COUNT(DISTINCT w.show_id) as wrote_total,
+            COUNT(DISTINCT c.show_id) as created_total,
+            ROUND(AVG(CASE WHEN a.show_id IS NOT NULL THEN show.metascore END), 1) as avg_acted_metascore,
+            ROUND(AVG(CASE WHEN d.show_id IS NOT NULL THEN show.metascore END), 1) as avg_directed_metascore,
+            ROUND(AVG(CASE WHEN w.show_id IS NOT NULL THEN show.metascore END), 1) as avg_wrote_metascore,
+            ROUND(AVG(CASE WHEN c.show_id IS NOT NULL THEN show.metascore END), 1) as avg_created_metascore
+        FROM person p
+        LEFT JOIN acted a ON p.id = a.person_id
+        LEFT JOIN directed d ON p.id = d.person_id
+        LEFT JOIN wrote w ON p.id = w.person_id
+        LEFT JOIN created c ON p.id = c.person_id
+        LEFT JOIN show ON show.id IN (a.show_id, d.show_id, w.show_id, c.show_id)
+        WHERE p.id = ?
+    ''', (person_id,)).fetchone()
+
+    return render_template('person_detail.html', 
+                         person=person,
+                         acted_shows=acted_shows,
+                         written_shows=written_shows,
+                         directed_shows=directed_shows,
+                         created_shows=created_shows,
+                         stats=stats,
+                         title=f"{person['name']}")
+
 
 # Production company info
 @APP.route('/company/<int:company_id>')
@@ -265,7 +330,7 @@ def genre_detail(genre_name):
 
 # Queries 1 - 10
 # Query 3: Shows with the most discrepancies between userscore and metascore
-@APP.route('/shows/top-discrepancies')
+@APP.route('/show/top-discrepancies')
 def top_discrepancies():
     results = db.execute("""
         SELECT

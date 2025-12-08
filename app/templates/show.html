@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>TV Shows & Movies</h1>
+<p>Page {{ page }} of {{ total_pages }} ({{ total }} total)</p>
+
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Rating</th>
+        <th>Seasons</th>
+        <th>Duration (min/ep)</th>
+        <th>Metascore</th>
+        <th>Metascore Sentiment</th>
+        <th>User Score</th>
+        <th>User Score Sentiment</th>
+    </tr>
+    {% for show in shows %}
+    <tr>
+        <td>
+            <a href="/show/{{ show.id }}">{{ show.title }}</a>
+            {% if show.tagline %}
+            <br><small><em>{{ show.tagline }}</em></small>
+            {% endif %}
+        </td>
+        <td>
+            {% if show.releaseDate %}
+            {{ show.releaseDate[:4] }}
+            {% endif %}
+        </td>
+        <td>
+            {% if show.rating is not none %}
+            {{ show.rating }}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.num_seasons > 0 %}
+            {{ show.num_seasons }}
+            {% else %}
+            Movie
+            {% endif %}
+        </td>
+        <td>
+            {% if show.duration is not none %}
+            {{ show.duration }}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.metascore is not none %}
+            {{ show.metascore }}
+            <br><small>({{ show.metascore_count }})</small>
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.metascore is not none %}
+            {{ show.metascore_sentiment }}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.userscore is not none %}
+            {{ show.userscore }}
+            <br><small>({{ show.userscore_count }})</small>
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.userscore is not none %}
+            {{ show.userscore_sentiment }}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- Simple pagination -->
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="/show/?page={{ page - 1 }}">&laquo; Previous</a>
+    {% endif %}
+    
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    
+    {% if page < total_pages %}
+    <a href="/show/?page={{ page + 1 }}">Next &raquo;</a>
+    {% endif %}
+</div>
+
+<style>
+    .pagination {
+        margin: 20px 0;
+        text-align: center;
+    }
+    .pagination a {
+        margin: 0 10px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+    }
+    .pagination span {
+        margin: 0 10px;
+    }
+</style>
+{% endblock %}

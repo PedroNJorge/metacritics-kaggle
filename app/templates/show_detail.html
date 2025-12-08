@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ show.title }}</h1>
+{% if show.tagline %}<p class="lead"><em>"{{ show.tagline }}"</em></p>{% endif %}
+
+<div class="row">
+    <div class="col-md-8">
+        <p><strong>Released:</strong> {{ show.release_date or 'Unknown' }}</p>
+        <p><strong>Rating:</strong> {{ show.rating or 'N/A' }}</p>
+        <p><strong>Duration:</strong> {{ show.duration or 'N/A' }} minutes</p>
+        <p><strong>Type:</strong> {% if show.num_seasons > 0 %}TV ({{ show.num_seasons }} seasons){% else %}Movie{% endif %}</p>
+        
+        {% if show.description %}
+        <h4>Description</h4>
+        <p>{{ show.description }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <h4>Scores</h4>
+        <div class="mb-3">
+            <strong>Metascore:</strong>
+            {% if show.metascore is not none %}
+            {{ show.metascore }} ({{ show.metascore_sentiment }})<br>
+            <small>{{ show.metascore_count }} reviews</small>
+            {% else %}
+            N/A
+            {% endif %}
+        </div>
+        
+        <div>
+            <strong>User Score:</strong>
+            {% if show.userscore is not none %}
+            {{ show.userscore }} ({{ show.userscore_sentiment }})<br>
+            <small>{{ show.userscore_count }} reviews</small>
+            {% else %}
+            N/A
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h4>Details</h4>
+<div class="row">
+    {% if genres %}
+    <div class="col-md-3">
+        <h5>Genres</h5>
+        {% for genre in genres %}
+        <span class="badge bg-secondary">{{ genre.genre_name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if companies %}
+    <div class="col-md-3">
+        <h5>Production</h5>
+        {% for company in companies %}
+        <div>{{ company.company }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if actors %}
+    <div class="col-md-3">
+        <h5>Cast</h5>
+        {% for actor in actors %}
+        <div>
+            <a href="/person/{{ actor.id }}">{{ actor.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="col-md-3">
+        {% if directors %}
+        <h5>Directors</h5>
+        {% for director in directors %}
+        <div>
+            <a href="/person/{{ director.id }}">{{ director.name }}</a>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        {% if writers %}
+        <h5>Writers</h5>
+        {% for writer in writers %}
+        <div>
+            <a href="/person/{{ writer.id }}">{{ writer.name }}</a>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/show/" class="btn btn-secondary">Back to Shows</a>
+</div>
+{% endblock %}

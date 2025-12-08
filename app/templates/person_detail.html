@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ person.name }}</h1>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Role Statistics</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Acted in:</strong> {{ stats.acted_total or 0 }} shows</p>
+                <p><strong>Directed:</strong> {{ stats.directed_total or 0 }} shows</p>
+                <p><strong>Wrote:</strong> {{ stats.wrote_total or 0 }} shows</p>
+                <p><strong>Created:</strong> {{ stats.created_total or 0 }} shows</p>
+                
+                {% if stats.avg_acted_metascore %}
+                <p><strong>Avg Score (Acted):</strong> {{ stats.avg_acted_metascore }}</p>
+                {% endif %}
+                {% if stats.avg_directed_metascore %}
+                <p><strong>Avg Score (Directed):</strong> {{ stats.avg_directed_metascore }}</p>
+                {% endif %}
+                {% if stats.avg_wrote_metascore %}
+                <p><strong>Avg Score (Wrote):</strong> {{ stats.avg_wrote_metascore }}</p>
+                {% endif %}
+                {% if stats.avg_created_metascore %}
+                <p><strong>Avg Score (Created):</strong> {{ stats.avg_created_metascore }}</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        {% if acted_shows %}
+        <h4>Acted In ({{ acted_shows|length }})</h4>
+        <div class="row">
+            {% for show in acted_shows[:12] %}
+            <div class="col-md-4 mb-2">
+                <a href="/show/{{ show.id }}">{{ show.title }}</a>
+                {% if show.releaseDate %}
+                <br><small class="text-muted">{{ show.releaseDate }}</small>
+                {% endif %}
+                {% if show.metascore is not none %}
+                <br><small>Score: {{ show.metascore }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% if acted_shows|length > 12 %}
+            <div class="col-12">
+                <em>... and {{ acted_shows|length - 12 }} more</em>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if directed_shows %}
+        <h4 class="mt-4">Directed ({{ directed_shows|length }})</h4>
+        <div class="row">
+            {% for show in directed_shows %}
+            <div class="col-md-4 mb-2">
+                <a href="/show/{{ show.id }}">{{ show.title }}</a>
+                {% if show.releaseDate %}
+                <br><small class="text-muted">{{ show.releaseDate }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if written_shows %}
+        <h4 class="mt-4">Wrote ({{ written_shows|length }})</h4>
+        <div class="row">
+            {% for show in written_shows %}
+            <div class="col-md-4 mb-2">
+                <a href="/show/{{ show.id }}">{{ show.title }}</a>
+                {% if show.releaseDate %}
+                <br><small class="text-muted">{{ show.releaseDate }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if created_shows %}
+        <h4 class="mt-4">Created ({{ created_shows|length }})</h4>
+        <div class="row">
+            {% for show in created_shows %}
+            <div class="col-md-4 mb-2">
+                <a href="/show/{{ show.id }}">{{ show.title }}</a>
+                {% if show.releaseDate %}
+                <br><small class="text-muted">{{ show.releaseDate }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/person/" class="btn btn-secondary">Back to All People</a>
+</div>
+
+<style>
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    h4 {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+        margin-top: 20px;
+    }
+    
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .col-md-4 a {
+        text-decoration: none;
+        color: #0d6efd;
+    }
+    
+    .col-md-4 a:hover {
+        text-decoration: underline;
+    }
+    
+    small.text-muted {
+        color: #6c757d;
+        font-size: 0.85em;
+    }
+</style>
+{% endblock %}
