@@ -296,59 +296,95 @@ def company():
                                                      total = total)
     
 # Production company info
-@APP.route('/productionCompany/<int:company_id>')
-def company_details(company_id):
+@APP.route('/productionCompany/<int:productionCompany_id>')
+def company_details(productionCompany_id):
     company = db.execute('''
         SELECT company
         FROM productionCompany
         WHERE id = ?
-    ''', (company_id,)).fetchone()
+    ''', (productionCompany_id,)).fetchone()
     if not company:
         return "Production company not found", 404
     
     # Produced shows
     shows_produced = db.execute('''
         SELECT show.title
-        FROM show
+        FROM show 
         JOIN producedBy p on show.id = p.show_id
         WHERE p.producer_id = ?
-    ''', (company_id,)).fetchall()
+    ''', (productionCompany_id,)).fetchall()
 
     return render_template('company_detail.html', company = company,
                                                   shows_produced = shows_produced)
 
-# Genres info (with pagination)
-@APP.route('/genre/<genre_name>')
-def genre_detail(genre_name):
+# Genres table
+@APP.route('/genres/')
+def genres():
     page = request.args.get('page', 1, type = int)
     per_page = 20
     offset = (page - 1) * per_page
     count_result = db.execute('''
-        SELECT COUNT(*) AS total 
-        FROM show s
-        JOIN genre g on s.id = g.show_id
-        WHERE g.genre_name = ?
-    ''', (genre_name,)).fetchone()
+        SELECT COUNT(DISTINCT genre_name) AS total 
+        FROM genre
+    ''').fetchone()
     total = count_result['total']
 
-    # Shows of a certain genre
-    shows = db.execute('''
-        SELECT s.id, s.title, s.releaseDate, s.metascore, s.userscore
-                       s.num_seasons
+    genres_list = db.execute('''
+        SELECT DISTINCT genre_name
+        FROM genre
+        ORDER BY genre_name
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('genres.html', genres = genres_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
+
+# Genres info
+@APP.route('/genres/<string:genre_name>')
+def genre_detail(genre_name):
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    
+    genre = db.execute('''
+        SELECT genre_name
+        FROM genre
+        WHERE genre_name = ?
+        LIMIT 1
+    ''', (genre_name,)).fetchone()
+    
+    if not genre:
+        return "Genre not found", 404
+    
+    count_result = db.execute('''
+        SELECT COUNT(*) AS total 
         FROM show s
-        JOIN genre g on s.id = g.show_id
+        JOIN genre g ON s.id = g.show_id
+        WHERE g.genre_name = ?
+    ''', (genre_name,)).fetchone()
+    
+    total = count_result['total'] if count_result else 0
+    
+    shows = db.execute('''
+        SELECT s.title
+        FROM show s
+        JOIN genre g ON s.id = g.show_id
         WHERE g.genre_name = ?
         ORDER BY s.title
         LIMIT ? OFFSET ?
     ''', (genre_name, per_page, offset)).fetchall()
-    total_pages = (total + per_page - 1) // per_page
-
+    
+    total_pages = (total + per_page - 1) // per_page if total > 0 else 1
+    
     return render_template('genre_detail.html',
-                            genre_name=genre_name,
-                            shows=shows,
-                            page=page,
-                            total_pages=total_pages,
-                            total=total)
+                           genre_name=genre_name,
+                           shows=shows,
+                           page=page,
+                           total_pages=total_pages,
+                           total=total)
 
 # Queries 1 - 10
 # Query 3: Shows with the most discrepancies between userscore and metascore

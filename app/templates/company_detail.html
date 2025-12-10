@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ company.company }}</h1>
+<h2>Produced shows</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                {% for show in shows_produced %} 
+                <div>
+                    <a href="/show/{{ show.title }}">{{ show.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4">
+    <a href="/productionCompany/" class="btn btn-secondary">Back to All Production Companies</a>
+</div>
+{% endblock %}

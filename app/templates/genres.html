@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Genres</h1>
+<p>Page {{ page }} of {{ total_pages }} ({{ total }} total)</p>
+
+<table class="table">
+    <tr>
+        <th>Genres</th>
+    </tr>
+    {% for genre in genres %}
+    <tr>
+        <td>
+            <a href="/genres/{{ genre.genre_name }}">{{ genre.genre_name }}</a>
+        </td>
+    {% endfor %}
+</table>
+
+<!-- Simple pagination -->
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="/genres/?page={{ page - 1 }}">&laquo; Previous</a>
+    {% endif %}
+    
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    
+    {% if page < total_pages %}
+    <a href="/genres/?page={{ page + 1 }}">Next &raquo;</a>
+    {% endif %}
+</div>
+
+<style>
+    .pagination {
+        margin: 20px 0;
+        text-align: center;
+    }
+    .pagination a {
+        margin: 0 10px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+    }
+    .pagination span {
+        margin: 0 10px;
+    }
+</style>
+{% endblock %}

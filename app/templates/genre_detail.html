@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ genre_name }}</h1>
+<h2>Shows of this genre</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                {% for show in shows %} 
+                <div>
+                    <a href="/show/{{ show.title }}">{{ show.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4">
+    <a href="/genres/" class="btn btn-secondary">Back to All Genres</a>
+</div>
+{% endblock %}
