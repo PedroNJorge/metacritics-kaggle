@@ -270,6 +270,32 @@ def person_detail(person_id):
                          stats=stats,
                          title=f"{person['name']}")
 
+# Acted in
+@APP.route('/acted/')
+def acted():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM productionCompanyacted
+    ''').fetchone()
+    total = count_result['total']
+
+    acted_list = db.execute('''
+        SELECT *
+        FROM acted
+        ORDER BY acted.show_id
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('productionCompany.html', acted = acted_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
+
+
 # Production company table
 @APP.route('/productionCompany/')
 def company():

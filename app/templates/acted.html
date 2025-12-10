@@ -12,15 +12,13 @@
         </tr>
     </thead>
     <tbody>
-        {% for record in records %}
+        {% for actors in acted %}
         <tr>
             <td>
-                <a href="/person/{{ record.person_id }}">{{ record.person_name }}</a>
+                <a href="/person/{{ person.id }}">{{ actors.person_id }}</a>
             </td>
             <td>
-                {% for show in record.shows %}
-                <a href="/show/{{ show.id }}">{{ show.title }}</a>{% if not loop.last %}, {% endif %}
-                {% endfor %}
+                <a href="/show/{{ show.id }}">{{ actors.show_id }}</a>{% if not loop.last %}, {% endif %}
             </td>
         </tr>
         {% endfor %}
