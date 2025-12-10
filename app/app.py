@@ -439,7 +439,7 @@ def producedBy():
                                                      total_pages = total_pages,
                                                      total = total)
 # Genres table
-@APP.route('/genres/')
+@APP.route('/genre/')
 def genres():
     page = request.args.get('page', 1, type = int)
     per_page = 20
@@ -458,18 +458,14 @@ def genres():
     ''', (per_page, offset)).fetchall()
     total_pages = (total + per_page - 1) // per_page
 
-    return render_template('genres.html', genres = genres_list,
+    return render_template('genre.html', genres = genres_list,
                                                      page = page,
                                                      total_pages = total_pages,
                                                      total = total)
 
 # Genres info
-@APP.route('/genres/<string:genre_name>')
+@APP.route('/genre/<string:genre_name>')
 def genre_detail(genre_name):
-    page = request.args.get('page', 1, type=int)
-    per_page = 20
-    offset = (page - 1) * per_page
-    
     genre = db.execute('''
         SELECT genre_name
         FROM genre
@@ -480,33 +476,19 @@ def genre_detail(genre_name):
     if not genre:
         return "Genre not found", 404
     
-    count_result = db.execute('''
-        SELECT COUNT(*) AS total 
-        FROM show s
-        JOIN genre g ON s.id = g.show_id
-        WHERE g.genre_name = ?
-    ''', (genre_name,)).fetchone()
-    
-    total = count_result['total'] if count_result else 0
-    
     shows = db.execute('''
-        SELECT s.title
+        SELECT s.id, s.title
         FROM show s
         JOIN genre g ON s.id = g.show_id
         WHERE g.genre_name = ?
         ORDER BY s.title
-        LIMIT ? OFFSET ?
-    ''', (genre_name, per_page, offset)).fetchall()
-    
-    total_pages = (total + per_page - 1) // per_page if total > 0 else 1
+    ''', (genre_name,)).fetchall()
     
     return render_template('genre_detail.html',
                            genre_name=genre_name,
-                           shows=shows,
-                           page=page,
-                           total_pages=total_pages,
-                           total=total)
+                           shows=shows)
 
+<<<<<<< Updated upstream
 # Queries 1 - 10
 # Query 3: Shows with the most discrepancies between userscore and metascore
 @APP.route('/queries/q3')
@@ -593,6 +575,9 @@ def writer_directors():
                          title="Writer-Directors Analysis")
 
 @APP.route('/queries/1')   
+=======
+@APP.route('/queries/1/')   
+>>>>>>> Stashed changes
 def query1():
     # Top 10 atores em + categorias
     q1 = db.execute ('''
@@ -606,7 +591,7 @@ def query1():
     ''').fetchall()
     return render_template('q1.html', q1 = q1)
 
-@APP.route('/queries/2')
+@APP.route('/queries/2/')
 def query2():
     # Show com melhor e pior metascore dentro de cada categoria
     q2 = db.execute ('''
@@ -632,7 +617,7 @@ def query2():
     ''').fetchall()
     return render_template('q2.html', q2 = q2)
 
-@APP.route('/queries/3')
+@APP.route('/queries/3/')
 def query3():
     # Shows with the most discrepancies between userscore and metascore
     q3 = db.execute('''
@@ -663,7 +648,7 @@ def query3():
     ''').fetchall()
     return render_template('q3.html', q3 = q3)
 
-@APP.route('/queries/4')
+@APP.route('/queries/4/')
 def query4():
     # Top 10 atores que fizeram mais shows
     q4 = db.execute('''
@@ -677,7 +662,7 @@ def query4():
     ''').fetchall()
     return render_template('q4.html', q4 = q4)
 
-@APP.route('/queries/5')
+@APP.route('/queries/5/')
 def query5():
     # Top 20 People who wrote and directed the same show
     q5 = db.execute('''
@@ -705,7 +690,7 @@ def query5():
     ''').fetchall()
     return render_template('q5.html', q5 = q5)
 
-@APP.route('/queries/6')
+@APP.route('/queries/6/')
 def query6():
     # Top 5 shows com mais temporadas
     q6 = db.execute('''
@@ -716,7 +701,7 @@ def query6():
     ''').fetchall()
     return render_template('q6.html', q6 = q6)
 
-@APP.route('/queries/7')
+@APP.route('/queries/7/')
 def query7():
     # Top 20 pares (director, actor) com mais projectos juntos
     q7 = db.execute('''
@@ -739,7 +724,7 @@ def query7():
     ''').fetchall()
     return render_template('q7.html', q7 = q7)
 
-@APP.route('/queries/8')
+@APP.route('/queries/8/')
 def query8():
     # Melhor show por década
     q8 = db.execute('''
@@ -781,7 +766,7 @@ def query8():
     ''').fetchall()
     return render_template('q8.html', q8 = q8)
 
-@APP.route('/queries/9')
+@APP.route('/queries/9/')
 def query9():
     # Por genre -> media de scores
     q9 = db.execute('''
@@ -797,7 +782,7 @@ def query9():
     ''').fetchall()
     return render_template('q9.html', q9 = q9)
 
-@APP.route('/queries/10')
+@APP.route('/queries/10/')
 def query10():
     # Top 5 shows com + pessoas envolvidas
     q10 = db.execute('''
@@ -846,7 +831,7 @@ def query10():
     ''').fetchall()
     return render_template('q10.html', q10 = q10)
 
-@APP.route('/queries/11')
+@APP.route('/queries/11/')
 def query11():
     # Genre + popular de cada decada
     q11 = db.execute('''
@@ -870,7 +855,7 @@ def query11():
     ''').fetchall()
     return render_template('q11.html', q11 = q11)
 
-@APP.route('/queries/12')
+@APP.route('/queries/12/')
 def query12():
     # Pares genre + bem sucedidas
     q12 = db.execute('''
@@ -895,7 +880,7 @@ def query12():
     ''').fetchall()
     return render_template('q12.html', q12 = q12)
 
-@APP.route('/queries/13')
+@APP.route('/queries/13/')
 def query13():
     # Genre + popular de cada decada
     q13 = db.execute('''
@@ -927,7 +912,7 @@ def query13():
     ''').fetchall()
     return render_template('q13.html', q13 = q13)
 
-@APP.route('/queries/14')
+@APP.route('/queries/14/')
 def query14():
     # Genre + popular de cada decada
     q14 = db.execute('''
@@ -953,7 +938,7 @@ def query14():
     ''').fetchall()
     return render_template('q14.html', q14 = q14)
 
-@APP.route('/queries/15')
+@APP.route('/queries/15/')
 def query15():
     # Show quality variation
     q15 = db.execute('''

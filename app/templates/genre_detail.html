@@ -10,7 +10,7 @@
             <div class="card-body">
                 {% for show in shows %} 
                 <div>
-                    <a href="/show/{{ show.title }}">{{ show.title }}</a>
+                    <a href="/show/{{ show.id }}">{{ show.title }}</a>
                 </div>
                 {% endfor %}
             </div>
@@ -18,6 +18,6 @@
     </div>
 </div>
 <div class="mt-4">
-    <a href="/genres/" class="btn btn-secondary">Back to All Genres</a>
+    <a href="/genre/" class="btn btn-secondary">Back to All Genres</a>
 </div>
 {% endblock %}

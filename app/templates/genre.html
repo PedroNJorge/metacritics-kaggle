@@ -11,7 +11,7 @@
     {% for genre in genres %}
     <tr>
         <td>
-            <a href="/genres/{{ genre.genre_name }}">{{ genre.genre_name }}</a>
+            <a href="/genre/{{ genre.genre_name }}">{{ genre.genre_name }}</a>
         </td>
     {% endfor %}
 </table>
@@ -19,13 +19,13 @@
 <!-- Simple pagination -->
 <div class="pagination">
     {% if page > 1 %}
-    <a href="/genres/?page={{ page - 1 }}">&laquo; Previous</a>
+    <a href="/genre/?page={{ page - 1 }}">&laquo; Previous</a>
     {% endif %}
     
     <span>Page {{ page }} of {{ total_pages }}</span>
     
     {% if page < total_pages %}
-    <a href="/genres/?page={{ page + 1 }}">Next &raquo;</a>
+    <a href="/genre/?page={{ page + 1 }}">Next &raquo;</a>
     {% endif %}
 </div>
 

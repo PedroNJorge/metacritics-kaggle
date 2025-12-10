@@ -49,7 +49,9 @@
     <div class="col-md-3">
         <h5>Genres</h5>
         {% for genre in genres %}
-        <span class="badge bg-secondary">{{ genre.genre_name }}</span>
+        <div>
+            <a href="/genre/{{ genre.genre_name }}" class="badge bg-secondary">{{ genre.genre_name }}</a>
+        </div>
         {% endfor %}
     </div>
     {% endif %}
@@ -58,7 +60,9 @@
     <div class="col-md-3">
         <h5>Production</h5>
         {% for company in companies %}
-        <div>{{ company.company }}</div>
+        <div>
+            <a href="/productionCompany/{{ company.id }}">{{ company.company }}</a>
+        </div>
         {% endfor %}
     </div>
     {% endif %}
