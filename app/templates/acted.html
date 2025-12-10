@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Actors</h1>
+<p>Page {{ page }} of {{ total_pages }} ({{ total }} total records)</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Person</th>
+            <th>Shows Acted In</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>
+                <a href="/person/{{ record.person_id }}">{{ record.person_name }}</a>
+            </td>
+            <td>
+                {% for show in record.shows %}
+                <a href="/show/{{ show.id }}">{{ show.title }}</a>{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="/acted/?page={{ page - 1 }}">&laquo; Previous</a>
+    {% endif %}
+    
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    
+    {% if page < total_pages %}
+    <a href="/acted/?page={{ page + 1 }}">Next &raquo;</a>
+    {% endif %}
+</div>
+
+<style>
+    .pagination {
+        margin: 20px 0;
+        text-align: center;
+    }
+    .pagination a {
+        margin: 0 10px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        border-radius: 3px;
+    }
+    .pagination a:hover {
+        background-color: #f5f5f5;
+    }
+    .pagination span {
+        margin: 0 10px;
+        font-weight: bold;
+    }
+    
+    table {
+        font-size: 0.9em;
+    }
+    th {
+        background-color: #f8f9fa;
+    }
+    td a {
+        text-decoration: none;
+        color: #0d6efd;
+    }
+    td a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

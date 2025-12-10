@@ -9,7 +9,6 @@ APP = Flask(__name__)
 # Start page
 @APP.route('/')
 def index():
-    stats = {}
     stats = db.execute ('''
         SELECT * FROM 
             (SELECT COUNT(*) AS Shows FROM show)
@@ -28,8 +27,7 @@ def index():
         JOIN
             (SELECT AVG(userscore) AS avg_userscore FROM show WHERE userscore IS NOT NULL)
     ''').fetchone()
-    logging.info(stats)
-    return render_template('shows_index.html', stats = stats)
+    return render_template('index.html', stats = stats)
 
 # Search a show by its title
 @APP.route('/search')
@@ -67,7 +65,7 @@ def search():
                                            total_pages = total_pages,
                                            total = total)
 
-# Navigation through all shows
+# Show table
 @APP.route('/show/')
 def show():
     page = request.args.get('page', 1, type = int)
@@ -158,7 +156,7 @@ def show_detail(show_id):
                                                directors = directors,
                                                creators = creators)
 
-# Navigation through all shows
+# People table
 @APP.route('/person/')
 def person():
     page = request.args.get('page', 1, type = int)
@@ -272,9 +270,33 @@ def person_detail(person_id):
                          stats=stats,
                          title=f"{person['name']}")
 
+# Production company table
+@APP.route('/productionCompany/')
+def company():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM productionCompany
+    ''').fetchone()
+    total = count_result['total']
 
+    company_list = db.execute('''
+        SELECT *
+        FROM productionCompany
+        ORDER BY company
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('productionCompany.html', companies = company_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
+    
 # Production company info
-@APP.route('/company/<int:company_id>')
+@APP.route('/productionCompany/<int:company_id>')
 def company_details(company_id):
     company = db.execute('''
         SELECT company

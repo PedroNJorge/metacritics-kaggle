@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+    <h2 class="mb-4">Database info</h2>
+    
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Shows</th>
+                <th>Actors</th>
+                <th>Directors</th>
+                <th>Writers</th>
+                <th>Creators</th>
+                <th>Companies</th>
+                <th>Average metascore</th>
+                <th>Average userscore</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ stats.Shows }}</td>
+                <td>{{ stats.Actors }}</td>
+                <td>{{ stats.Directors }}</td>
+                <td>{{ stats.Writers }}</td>
+                <td>{{ stats.Creators }}</td>
+                <td>{{ stats.Companies }}</td>
+                <td>{{ stats.avg_metascore }}</td>
+                <td>{{ stats.avg_userscore }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

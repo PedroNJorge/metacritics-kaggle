@@ -6,9 +6,12 @@
 
 <table class="table">
     <tr>
+        <th>Id</th>
         <th>Title</th>
         <th>Year</th>
         <th>Rating</th>
+        <th>Tagline</th>
+        <th>Description</th>
         <th>Seasons</th>
         <th>Duration (min/ep)</th>
         <th>Metascore</th>
@@ -19,9 +22,14 @@
     {% for show in shows %}
     <tr>
         <td>
-            <a href="/show/{{ show.id }}">{{ show.title }}</a>
+            <a href="/show/{{ show.id }}">{{ show.id }}</a>
             {% if show.tagline %}
             <br><small><em>{{ show.tagline }}</em></small>
+            {% endif %}
+        </td>
+        <td>
+            {% if show.title %}
+            {{ show.title }}
             {% endif %}
         </td>
         <td>
@@ -32,6 +40,20 @@
         <td>
             {% if show.rating is not none %}
             {{ show.rating }}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.tagline is not none %}
+            {{ show.tagline }}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td>
+            {% if show.description is not none %}
+            {{ show.description }}
             {% else %}
             N/A
             {% endif %}
