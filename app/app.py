@@ -356,14 +356,13 @@ def top_discrepancies():
         ORDER BY
           weighted_discrepancy DESC,
           discrepancy DESC
-        LIMIT 50;
+        LIMIT 50
     """).fetchall()
 
     return render_template('top_discrepancies.html',
                            shows = results,
                            title = "Top 10 Biggest Score Gaps")
 
-# Query 5 : People who wrote and directed the same show
 @APP.route('/people/writer-directors')
 def writer_directors():
     # Get statistical overview first
@@ -413,23 +412,24 @@ def writer_directors():
                          people=results,
                          stats=stats,
                          title="Writer-Directors Analysis")
-@APP.route('/q1')   
+
+@APP.route('/queries/1')   
 def query1():
-    # Ator/es com mais categorias   
+    # Top 10 atores em + categorias
     q1 = db.execute ('''
-        SELECT person.name, COUNT(genre.show_id) AS n
+        SELECT person.name, COUNT(genre.show_id) AS num_genres
         FROM person
         JOIN acted ON person.id = acted.person_id
         JOIN genre ON acted.show_id = genre.show_id
         GROUP BY person.name
-        ORDER BY n
-        LIMIT 1
+        ORDER BY num_genres DESC
+        LIMIT 10
     ''').fetchall()
     return render_template('q1.html', q1 = q1)
 
-@APP.route('/q2')
+@APP.route('/queries/2')
 def query2():
-    # Show com melhor e pior rating dentro de cada categoria
+    # Show com melhor e pior metascore dentro de cada categoria
     q2 = db.execute ('''
         SELECT genre_name, title, metascore,
         CASE WHEN rnkBest = 1 THEN 'Best' ELSE 'Worst' END as rating_type
@@ -449,13 +449,44 @@ def query2():
             WHERE s.metascore IS NOT NULL
         ) x
         WHERE x.rnkBest = 1 OR x.rnkWorst = 1
-        ORDER BY genre_name, rating_type ASC;
+        ORDER BY genre_name, rating_type ASC
     ''').fetchall()
     return render_template('q2.html', q2 = q2)
 
-@APP.route('/q4')
+@APP.route('/queries/3')
+def query3():
+    # Shows with the most discrepancies between userscore and metascore
+    q3 = db.execute('''
+        SELECT
+          title,
+          metascore,
+          userscore,
+          metascore_count,
+          userscore_count,
+          ABS(metascore - userscore) AS discrepancy,
+          CASE 
+            WHEN userscore_count < 10 THEN 'Low User Reviews'
+            WHEN metascore_count < 5 THEN 'Low Critic Reviews'
+            ELSE 'Sufficient Reviews'
+          END AS reliability,
+          ABS(metascore - userscore) * 
+            MIN(1.0, userscore_count / 20.0) *
+            MIN(1.0, metascore_count / 10.0)
+          AS weighted_discrepancy
+        FROM show
+        WHERE
+          metascore IS NOT NULL 
+          AND userscore IS NOT NULL
+        ORDER BY
+          weighted_discrepancy DESC,
+          discrepancy DESC
+        LIMIT 50
+    ''').fetchall()
+    return render_template('q3.html', q3 = q3)
+
+@APP.route('/queries/4')
 def query4():
-    # OS 3 atores que fizeram mais shows
+    # Top 10 atores que fizeram mais shows
     q4 = db.execute('''
         SELECT person.name, COUNT(show.id) AS num
         FROM person 
@@ -463,37 +494,238 @@ def query4():
         JOIN show ON acted.show_id = show.id 
         GROUP BY person.name
         ORDER BY num desc
-        LIMIT 3;
+        LIMIT 10
     ''').fetchall()
     return render_template('q4.html', q4 = q4)
 
-@APP.route('/q6')
+@APP.route('/queries/5')
+def query5():
+    # Top 20 People who wrote and directed the same show
+    q5 = db.execute('''
+        SELECT 
+            p.name,
+            COUNT(DISTINCT s.id) AS shows_count,
+            ROUND(AVG(s.metascore), 1) AS avg_metascore,
+            ROUND(AVG(s.userscore), 1) AS avg_userscore,
+            MAX(s.metascore) AS best_score,
+            MIN(s.metascore) AS worst_score
+        FROM person p
+        JOIN wrote w ON p.id = w.person_id
+        JOIN directed d ON p.id = d.person_id AND w.show_id = d.show_id
+        JOIN show s ON s.id = w.show_id
+        WHERE s.metascore IS NOT NULL
+        GROUP BY p.id, p.name
+        ORDER BY 
+            CASE 
+                WHEN COUNT(DISTINCT s.id) >= 3 THEN 0
+                ELSE 1
+            END,
+            avg_metascore DESC,
+            shows_count DESC
+        LIMIT 30
+    ''').fetchall()
+    return render_template('q5.html', q5 = q5)
+
+@APP.route('/queries/6')
 def query6():
     # Top 5 shows com mais temporadas
     q6 = db.execute('''
-        SELECT show.title, show.num_seasons
+        SELECT title, num_seasons, userscore
         FROM show
         ORDER BY num_seasons desc
-        LIMIT 5;
+        LIMIT 5
     ''').fetchall()
     return render_template('q6.html', q6 = q6)
 
-@APP.route('/q7')
+@APP.route('/queries/7')
 def query7():
-    # Criadores, shows, e companhias de produção
+    # Top 20 pares (director, actor) com mais projectos juntos
     q7 = db.execute('''
         SELECT 
-            p.name AS creator,
-            s.title AS show_title,
-            pc.company AS production_company
-            FROM created c
-        JOIN person p 
-        ON p.id = c.person_id
-        JOIN show s 
-        ON s.id = c.show_id
-        LEFT JOIN producedBy pb 
-        ON pb.show_id = s.id
-        LEFT JOIN productioncompany pc 
-        ON pc.id = pb.producer_id;
+            d.name AS director,
+            a.name AS actor,
+            COUNT(DISTINCT s.id) AS projects_together
+        FROM directed dir
+        JOIN person d ON dir.person_id = d.id
+        JOIN show s ON dir.show_id = s.id
+        JOIN acted ac ON ac.show_id = s.id
+        JOIN person a ON ac.person_id = a.id
+        WHERE d.id != a.id
+        GROUP BY d.id, a.id
+        HAVING COUNT(DISTINCT s.id) >= 3
+        ORDER BY
+            projects_together DESC,
+            director
+        LIMIT 20
     ''').fetchall()
     return render_template('q7.html', q7 = q7)
+
+@APP.route('/queries/8')
+def query8():
+    # Melhor show por década
+    q8 = db.execute('''
+        WITH DecadeShows AS (
+            SELECT 
+                s.*,
+                CAST(SUBSTR(s.releaseDate, 1, 3) || '0' AS INTEGER) AS decade_start
+            FROM show s
+            WHERE s.releaseDate IS NOT NULL
+            AND s.releaseDate != ''
+            AND LENGTH(s.releaseDate) >= 4
+        ),
+        RankedShows AS (
+            SELECT 
+                ds.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY ds.decade_start 
+                    ORDER BY 
+                        (COALESCE(ds.metascore, 0) * 0.5 + 
+                         COALESCE(ds.userscore, 0) * 0.5) DESC,
+                        ds.metascore_count DESC,
+                        ds.userscore_count DESC
+                ) AS decade_rank
+            FROM DecadeShows ds
+            WHERE (ds.rating IS NOT NULL AND ds.rating > 0)
+               OR (ds.metascore IS NOT NULL AND ds.metascore > 0)
+               OR (ds.userscore IS NOT NULL AND ds.userscore > 0)
+        )
+        SELECT 
+            rs.decade_start || 's' AS decade,
+            rs.releaseDate,
+            rs.title,
+            rs.rating,
+            rs.metascore,
+            rs.userscore
+        FROM RankedShows rs
+        WHERE rs.decade_rank = 1
+        ORDER BY rs.decade_start DESC
+    ''').fetchall()
+    return render_template('q8.html', q8 = q8)
+
+@APP.route('/queries/9')
+def query9():
+    # Por genre -> media de scores
+    q9 = db.execute('''
+        SELECT 
+            g.genre_name AS genre,
+            ROUND(AVG(s.metascore), 2) AS avg_metascore,
+            ROUND(AVG(s.userscore), 2) AS avg_userscore,
+            COUNT(DISTINCT s.id) AS num_shows
+        FROM genre g
+        JOIN show s ON g.show_id = s.id
+        GROUP BY g.genre_name
+        ORDER BY avg_metascore DESC
+    ''').fetchall()
+    return render_template('q9.html', q9 = q9)
+
+@APP.route('/queries/10')
+def query10():
+    # Top 5 shows com + pessoas envolvidas
+    q10 = db.execute('''
+        SELECT 
+            s.title,
+            s.releaseDate,
+            s.metascore,
+            s.userscore,
+            s.num_seasons,
+            COUNT(DISTINCT p.id) AS total_people_involved,
+            (
+                SELECT COUNT(DISTINCT person_id) 
+                FROM acted 
+                WHERE show_id = s.id
+            ) AS actors,
+            (
+                SELECT COUNT(DISTINCT person_id) 
+                FROM directed 
+                WHERE show_id = s.id
+            ) AS directors,
+            (
+                SELECT COUNT(DISTINCT person_id) 
+                FROM wrote 
+                WHERE show_id = s.id
+            ) AS writers,
+            (
+                SELECT COUNT(DISTINCT person_id) 
+                FROM created 
+                WHERE show_id = s.id
+            ) AS creators
+        FROM show s
+        LEFT JOIN (
+            SELECT show_id, person_id FROM acted
+            UNION 
+            SELECT show_id, person_id FROM directed
+            UNION 
+            SELECT show_id, person_id FROM wrote
+            UNION 
+            SELECT show_id, person_id FROM created
+        ) AS all_roles ON s.id = all_roles.show_id
+        LEFT JOIN person p ON all_roles.person_id = p.id
+        WHERE s.title IS NOT NULL
+        GROUP BY s.id
+        ORDER BY total_people_involved DESC
+        LIMIT 5
+    ''').fetchall()
+    return render_template('q10.html', q10 = q10)
+
+@APP.route('/queries/11')
+def query11():
+    # Genre + popular de cada decada
+    q11 = db.execute('''
+        SELECT x.decade, x.genre_name, x.avg_metascore, x.show_count
+        FROM (
+            SELECT
+                CAST(SUBSTR(s.releaseDate, 1, 3) || '0' AS INTEGER) || 's' AS decade,
+                g.genre_name,
+                COUNT(DISTINCT s.id) AS show_count,
+                ROUND(AVG(s.metascore), 2) AS avg_metascore,
+                ROW_NUMBER() OVER (
+                    PARTITION BY CAST(SUBSTR(s.releaseDate, 1, 3) || '0' AS INTEGER) || 's'
+                    ORDER BY COUNT(DISTINCT s.id) DESC, g.genre_name) AS rnk
+            FROM genre g
+            JOIN show s ON g.show_id = s.id
+            WHERE s.releaseDate IS NOT NULL 
+              AND LENGTH(s.releaseDate) >= 4
+            GROUP BY decade, g.genre_name
+            ORDER BY decade, show_count DESC) x
+        WHERE x.rnk = 1
+    ''').fetchall()
+    return render_template('q11.html', q11 = q11)
+
+@APP.route('/queries/12')
+def query12():
+    # Pares genre + bem sucedidas
+    q12 = db.execute('''
+        SELECT 
+            g1.genre_name AS genre1,
+            g2.genre_name AS genre2,
+            COUNT(DISTINCT s.id) AS show_count,
+            ROUND(AVG(s.metascore), 2) AS avg_metascore,
+            ROUND(AVG(s.userscore), 2) AS avg_userscore
+        FROM genre g1
+        JOIN genre g2 ON g1.show_id = g2.show_id AND g1.genre_name < g2.genre_name
+        JOIN show s ON g1.show_id = s.id
+        WHERE s.metascore IS NOT NULL
+        GROUP BY g1.genre_name, g2.genre_name
+        HAVING COUNT(DISTINCT s.id) >= 5
+        ORDER BY show_count DESC
+        LIMIT 20
+    ''').fetchall()
+    return render_template('q12.html', q12 = q12)
+
+@APP.route('/queries/13')
+def query13():
+    # Genre + popular de cada decada
+    q13 = db.execute().fetchall()
+    return render_template('q13.html', q13 = q13)
+
+@APP.route('/queries/14')
+def query14():
+    # Genre + popular de cada decada
+    q14 = db.execute().fetchall()
+    return render_template('q14.html', q14 = q14)
+
+@APP.route('/queries/15')
+def query15():
+    # Genre + popular de cada decada
+    q15 = db.execute().fetchall()
+    return render_template('q15.html', q15 = q15)
