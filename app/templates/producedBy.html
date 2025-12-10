@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Acted</h1>
+<h1>Produced By</h1>
 <p>Page {{ page }} of {{ total_pages }} ({{ total }} total records)</p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Person</th>
-            <th>Shows Acted In</th>
+            <th>Production Company</th>
+            <th>Produced Shows</th>
         </tr>
     </thead>
     <tbody>
-        {% for actor in acted %}
+        {% for p in producer %}
         <tr>
             <td>
-                <a href="/person/{{ actor.person_id }}">{{ actor.person_id }}</a>
+                <a href="/productionCompany/{{ p.producer_id }}">{{ p.producer_id }}</a>
             </td>
             <td>
-                <a href="/show/{{ actor.show_id }}">{{ actor.show_id }}</a>{% if not loop.last %}, {% endif %}
+                <a href="/show/{{ p.show_id }}">{{ p.show_id }}</a>{% if not loop.last %}, {% endif %}
             </td>
         </tr>
         {% endfor %}
@@ -36,6 +36,9 @@
     {% if page < total_pages %}
     <a href="/acted/?page={{ page + 1 }}">Next &raquo;</a>
     {% endif %}
+</div>
+<div class="mt-4">
+    <a href="/" class="btn btn-secondary">Back to Home Page</a>
 </div>
 <style>
     .pagination {

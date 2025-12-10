@@ -278,23 +278,94 @@ def acted():
     offset = (page - 1) * per_page
     count_result = db.execute ('''
         SELECT COUNT (*) AS total
-        FROM productionCompanyacted
+        FROM acted
     ''').fetchone()
     total = count_result['total']
 
     acted_list = db.execute('''
         SELECT *
-        FROM acted
-        ORDER BY acted.show_id
+        FROM acted a
+        ORDER BY a.show_id
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
     total_pages = (total + per_page - 1) // per_page
 
-    return render_template('productionCompany.html', acted = acted_list,
+    return render_template('acted.html', acted = acted_list,
                                                      page = page,
                                                      total_pages = total_pages,
                                                      total = total)
 
+@APP.route('/wrote/')
+def wrote():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM wrote
+    ''').fetchone()
+    total = count_result['total']
+
+    wrote_list = db.execute('''
+        SELECT *
+        FROM wrote w
+        ORDER BY w.show_id
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('wrote.html', wrote = wrote_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
+
+@APP.route('/directed/')
+def directed():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM directed
+    ''').fetchone()
+    total = count_result['total']
+
+    directed_list = db.execute('''
+        SELECT *
+        FROM directed d
+        ORDER BY d.show_id
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('directed.html', director = directed_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
+
+@APP.route('/created/')
+def created():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM created
+    ''').fetchone()
+    total = count_result['total']
+
+    created_list = db.execute('''
+        SELECT *
+        FROM created c
+        ORDER BY c.show_id
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('created.html', creator = created_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
 
 # Production company table
 @APP.route('/productionCompany/')
@@ -343,6 +414,30 @@ def company_details(productionCompany_id):
     return render_template('company_detail.html', company = company,
                                                   shows_produced = shows_produced)
 
+# Produced by table
+@APP.route('/producedBy/')
+def producedBy():
+    page = request.args.get('page', 1, type = int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    count_result = db.execute ('''
+        SELECT COUNT (*) AS total
+        FROM producedBy
+    ''').fetchone()
+    total = count_result['total']
+
+    p_list = db.execute('''
+        SELECT *
+        FROM producedBy p
+        ORDER BY p.show_id
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template('producedBy.html', producer = p_list,
+                                                     page = page,
+                                                     total_pages = total_pages,
+                                                     total = total)
 # Genres table
 @APP.route('/genres/')
 def genres():
@@ -414,7 +509,7 @@ def genre_detail(genre_name):
 
 # Queries 1 - 10
 # Query 3: Shows with the most discrepancies between userscore and metascore
-@APP.route('/show/top-discrepancies')
+@APP.route('/queries/q3')
 def top_discrepancies():
     results = db.execute("""
         SELECT
