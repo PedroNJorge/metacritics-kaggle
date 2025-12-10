@@ -784,32 +784,114 @@ def query12():
             g2.genre_name AS genre2,
             COUNT(DISTINCT s.id) AS show_count,
             ROUND(AVG(s.metascore), 2) AS avg_metascore,
-            ROUND(AVG(s.userscore), 2) AS avg_userscore
+            ROUND(AVG(s.userscore), 2) AS avg_userscore,
+            ROUND(SQRT(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)), 2) 
+            AS metascore_stddev,
+            ROUND(SQRT(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)), 2) 
+            AS userscore_stddev
         FROM genre g1
         JOIN genre g2 ON g1.show_id = g2.show_id AND g1.genre_name < g2.genre_name
         JOIN show s ON g1.show_id = s.id
-        WHERE s.metascore IS NOT NULL
+        WHERE s.metascore IS NOT NULL AND s.userscore IS NOT NULL
         GROUP BY g1.genre_name, g2.genre_name
         HAVING COUNT(DISTINCT s.id) >= 5
-        ORDER BY show_count DESC
-        LIMIT 20
+        ORDER BY avg_metascore DESC, metascore_stddev ASC
+        LIMIT 5
     ''').fetchall()
     return render_template('q12.html', q12 = q12)
 
 @APP.route('/queries/13')
 def query13():
     # Genre + popular de cada decada
-    q13 = db.execute().fetchall()
+    q13 = db.execute('''
+        SELECT 
+            pc.company,
+            COUNT(DISTINCT s.id) AS total_shows,
+            ROUND(AVG(s.metascore), 2) AS avg_metascore,
+            ROUND(SQRT(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)), 2) AS metascore_stddev,
+            ROUND(SQRT(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)) / 
+                  NULLIF(AVG(s.metascore), 0) * 100, 2) AS metascore_cv_percent,
+            ROUND(AVG(s.userscore), 2) AS avg_userscore,
+            ROUND(SQRT(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)), 2) AS userscore_stddev,
+            ROUND(SQRT(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)) / 
+                  NULLIF(AVG(s.userscore), 0) * 100, 2) AS userscore_cv_percent,
+            COUNT(DISTINCT CASE WHEN s.metascore_sentiment = 'Universal acclaim' THEN s.id END) AS highly_rated_shows,
+            ROUND(100.0 * COUNT(DISTINCT CASE WHEN s.metascore_sentiment = 'Universal acclaim' THEN s.id END) / 
+                  COUNT(DISTINCT s.id), 2) AS highly_rated_percent
+        FROM productionCompany pc
+        JOIN producedBy pb ON pc.id = pb.producer_id
+        JOIN show s ON pb.show_id = s.id
+        WHERE s.metascore IS NOT NULL
+          AND s.userscore IS NOT NULL
+          AND s.metascore_count >= 8
+          AND s.userscore_count >= 8
+        GROUP BY pc.id
+        HAVING COUNT(DISTINCT s.id) >= 5
+        ORDER BY highly_rated_percent DESC, avg_metascore DESC, metascore_stddev ASC
+        LIMIT 20
+    ''').fetchall()
     return render_template('q13.html', q13 = q13)
 
 @APP.route('/queries/14')
 def query14():
     # Genre + popular de cada decada
-    q14 = db.execute().fetchall()
+    q14 = db.execute('''
+        WITH Stats AS (
+            SELECT 
+                num_seasons,
+                COUNT(*) AS show_count,
+                ROUND(AVG(metascore), 2) AS avg_metascore,
+                ROUND(SQRT(AVG(metascore * metascore) - AVG(metascore) * AVG(metascore)), 2) AS metascore_stddev
+            FROM show
+            WHERE metascore IS NOT NULL
+              AND metascore > 0
+              AND metascore_count >= 10
+              AND userscore IS NOT NULL
+            GROUP BY num_seasons
+            HAVING COUNT(*) >= 8
+            ORDER BY num_seasons
+        )
+        SELECT 
+            *,
+            ROUND(metascore_stddev / NULLIF(avg_metascore, 0) * 100, 2) AS metascore_cv_percent
+        FROM Stats
+    ''').fetchall()
     return render_template('q14.html', q14 = q14)
 
 @APP.route('/queries/15')
 def query15():
-    # Genre + popular de cada decada
-    q15 = db.execute().fetchall()
+    # Show quality variation
+    q15 = db.execute('''
+        WITH DecadeStats AS (
+            SELECT 
+                CAST(SUBSTR(releaseDate, 1, 3) || '0' AS INTEGER) || 's' AS decade,
+                COUNT(*) AS total_shows,
+                ROUND(AVG(metascore), 2) AS avg_metascore,
+                ROUND(SQRT(AVG(metascore * metascore) - AVG(metascore) * AVG(metascore)), 2) AS metascore_stddev,
+                ROUND(AVG(userscore), 2) AS avg_userscore,
+                ROUND(SQRT(AVG(userscore * userscore) - AVG(userscore) * AVG(userscore)), 2) AS userscore_stddev,
+                ROUND(AVG(num_seasons), 2) AS avg_seasons,
+                ROUND(AVG(duration), 2) AS avg_duration
+            FROM show
+            WHERE releaseDate IS NOT NULL
+              AND metascore IS NOT NULL
+              AND userscore IS NOT NULL
+              AND LENGTH(releaseDate) >= 4
+            GROUP BY decade
+            HAVING COUNT(*) >= 10
+        )
+        SELECT 
+            decade,
+            total_shows,
+            avg_metascore,
+            metascore_stddev,
+            ROUND(metascore_stddev / NULLIF(avg_metascore, 0) * 100, 2) AS metascore_cv_percent,
+            avg_userscore,
+            userscore_stddev,
+            ROUND(userscore_stddev / NULLIF(avg_userscore, 0) * 100, 2) AS userscore_cv_percent,
+            avg_seasons,
+            avg_duration
+        FROM DecadeStats
+        ORDER BY decade DESC;
+    ''').fetchall()
     return render_template('q15.html', q15 = q15)
