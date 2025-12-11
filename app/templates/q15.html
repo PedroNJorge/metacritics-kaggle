@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 15</title>
+</head>
+<body>
+    <h2>Decade Comparison</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Decade</th>
+            <th>Critic</th>
+            <th>User</th>
+            <th>Gap</th>
+            <th>Shows</th>
+        </tr>
+        {% for row in q15 %}
+        <tr>
+            <td>{{ row.decade }}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>{{ row.avg_userscore }}</td>
+            <td>
+                {% set gap = row.avg_metascore - row.avg_userscore %}
+                <span>
+                    {{ "%.1f"|format(gap) }}
+                </span>
+            </td>
+            <td>{{ row.total_shows }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><em>Positive gap = critics rate higher, Negative gap = users rate higher</em></p>
+    <p><a href="/queries/"> Back to queries </a></p>
+</body>
+{% endblock %}

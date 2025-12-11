@@ -488,96 +488,12 @@ def genre_detail(genre_name):
                            genre_name=genre_name,
                            shows=shows)
 
-<<<<<<< Updated upstream
-# Queries 1 - 10
-# Query 3: Shows with the most discrepancies between userscore and metascore
-@APP.route('/queries/q3')
-def top_discrepancies():
-    results = db.execute("""
-        SELECT
-          title,
-          metascore,
-          userscore,
-          metascore_count,
-          userscore_count,
-          ABS(metascore - userscore) AS discrepancy,
-          CASE 
-            WHEN userscore_count < 10 THEN 'Low User Reviews'
-            WHEN metascore_count < 5 THEN 'Low Critic Reviews'
-            ELSE 'Sufficient Reviews'
-          END AS reliability,
-          ABS(metascore - userscore) * 
-            MIN(1.0, userscore_count / 20.0) *
-            MIN(1.0, metascore_count / 10.0)
-          AS weighted_discrepancy
-        FROM show
-        WHERE
-          metascore IS NOT NULL 
-          AND userscore IS NOT NULL
-        ORDER BY
-          weighted_discrepancy DESC,
-          discrepancy DESC
-        LIMIT 50
-    """).fetchall()
+@APP.route('/queries/')
+def queries():
+    return render_template('queries.html', page = 'queries')
 
-    return render_template('top_discrepancies.html',
-                           shows = results,
-                           title = "Top 10 Biggest Score Gaps")
-
-@APP.route('/people/writer-directors')
-def writer_directors():
-    # Get statistical overview first
-    stats = db.execute("""
-        WITH wd AS (
-            SELECT p.id, COUNT(DISTINCT s.id) AS shows_count
-            FROM person p
-            JOIN wrote w ON p.id = w.person_id
-            JOIN directed d ON p.id = d.person_id AND w.show_id = d.show_id
-            JOIN show s ON s.id = w.show_id
-            GROUP BY p.id
-        )
-        SELECT 
-            COUNT(*) AS total_people,
-            AVG(shows_count) AS avg_shows,
-            SUM(CASE WHEN shows_count = 1 THEN 1 ELSE 0 END) AS one_show_wonders,
-            SUM(CASE WHEN shows_count >= 3 THEN 1 ELSE 0 END) AS frequent_collaborators
-        FROM wd
-    """).fetchone()
-    
-    # Get the writer-directors
-    results = db.execute("""
-        SELECT 
-            p.name,
-            COUNT(DISTINCT s.id) AS shows_count,
-            ROUND(AVG(s.metascore), 1) AS avg_metascore,
-            ROUND(AVG(s.userscore), 1) AS avg_userscore,
-            MAX(s.metascore) AS best_score,
-            MIN(s.metascore) AS worst_score
-        FROM person p
-        JOIN wrote w ON p.id = w.person_id
-        JOIN directed d ON p.id = d.person_id AND w.show_id = d.show_id
-        JOIN show s ON s.id = w.show_id
-        WHERE s.metascore IS NOT NULL
-        GROUP BY p.id, p.name
-        ORDER BY 
-            CASE 
-                WHEN COUNT(DISTINCT s.id) >= 3 THEN 0
-                ELSE 1
-            END,
-            avg_metascore DESC,
-            shows_count DESC
-        LIMIT 30
-    """).fetchall()
-    
-    return render_template('writer_directors.html',
-                         people=results,
-                         stats=stats,
-                         title="Writer-Directors Analysis")
-
+# Queries 1 - 15
 @APP.route('/queries/1')   
-=======
-@APP.route('/queries/1/')   
->>>>>>> Stashed changes
 def query1():
     # Top 10 atores em + categorias
     q1 = db.execute ('''
@@ -865,9 +781,9 @@ def query12():
             COUNT(DISTINCT s.id) AS show_count,
             ROUND(AVG(s.metascore), 2) AS avg_metascore,
             ROUND(AVG(s.userscore), 2) AS avg_userscore,
-            ROUND(SQRT(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)), 2) 
+            ROUND(sqrt(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)), 2) 
             AS metascore_stddev,
-            ROUND(SQRT(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)), 2) 
+            ROUND(sqrt(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)), 2) 
             AS userscore_stddev
         FROM genre g1
         JOIN genre g2 ON g1.show_id = g2.show_id AND g1.genre_name < g2.genre_name
@@ -882,18 +798,18 @@ def query12():
 
 @APP.route('/queries/13/')
 def query13():
-    # Genre + popular de cada decada
+    # Top 20 Production Companies
     q13 = db.execute('''
         SELECT 
             pc.company,
             COUNT(DISTINCT s.id) AS total_shows,
             ROUND(AVG(s.metascore), 2) AS avg_metascore,
-            ROUND(SQRT(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)), 2) AS metascore_stddev,
-            ROUND(SQRT(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)) / 
+            ROUND(sqrt(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)), 2) AS metascore_stddev,
+            ROUND(sqrt(AVG(s.metascore * s.metascore) - AVG(s.metascore) * AVG(s.metascore)) / 
                   NULLIF(AVG(s.metascore), 0) * 100, 2) AS metascore_cv_percent,
             ROUND(AVG(s.userscore), 2) AS avg_userscore,
-            ROUND(SQRT(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)), 2) AS userscore_stddev,
-            ROUND(SQRT(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)) / 
+            ROUND(sqrt(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)), 2) AS userscore_stddev,
+            ROUND(sqrt(AVG(s.userscore * s.userscore) - AVG(s.userscore) * AVG(s.userscore)) / 
                   NULLIF(AVG(s.userscore), 0) * 100, 2) AS userscore_cv_percent,
             COUNT(DISTINCT CASE WHEN s.metascore_sentiment = 'Universal acclaim' THEN s.id END) AS highly_rated_shows,
             ROUND(100.0 * COUNT(DISTINCT CASE WHEN s.metascore_sentiment = 'Universal acclaim' THEN s.id END) / 
@@ -914,14 +830,14 @@ def query13():
 
 @APP.route('/queries/14/')
 def query14():
-    # Genre + popular de cada decada
+    # Show Quality vs Number of Seasons
     q14 = db.execute('''
         WITH Stats AS (
             SELECT 
                 num_seasons,
                 COUNT(*) AS show_count,
                 ROUND(AVG(metascore), 2) AS avg_metascore,
-                ROUND(SQRT(AVG(metascore * metascore) - AVG(metascore) * AVG(metascore)), 2) AS metascore_stddev
+                ROUND(sqrt(AVG(metascore * metascore) - AVG(metascore) * AVG(metascore)), 2) AS metascore_stddev
             FROM show
             WHERE metascore IS NOT NULL
               AND metascore > 0
@@ -947,9 +863,9 @@ def query15():
                 CAST(SUBSTR(releaseDate, 1, 3) || '0' AS INTEGER) || 's' AS decade,
                 COUNT(*) AS total_shows,
                 ROUND(AVG(metascore), 2) AS avg_metascore,
-                ROUND(SQRT(AVG(metascore * metascore) - AVG(metascore) * AVG(metascore)), 2) AS metascore_stddev,
+                ROUND(sqrt(AVG(metascore * metascore) - AVG(metascore) * AVG(metascore)), 2) AS metascore_stddev,
                 ROUND(AVG(userscore), 2) AS avg_userscore,
-                ROUND(SQRT(AVG(userscore * userscore) - AVG(userscore) * AVG(userscore)), 2) AS userscore_stddev,
+                ROUND(sqrt(AVG(userscore * userscore) - AVG(userscore) * AVG(userscore)), 2) AS userscore_stddev,
                 ROUND(AVG(num_seasons), 2) AS avg_seasons,
                 ROUND(AVG(duration), 2) AS avg_duration
             FROM show

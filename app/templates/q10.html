@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 10</title>
+</head>
+<body>
+    <h2>Top 5 shows with the biggest working crew</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Release Date</th>
+            <th>Userscore</th>
+            <th>Metascore</th>
+            <th>Seasons</th>
+            <th>People involved</th>
+        </tr>
+        {% for row in q10 %}
+        <tr>
+            <td>{{ row.title}}</td>
+            <td>{{ row.releaseDate }}</td>
+            <td>{{ row.metascore }}</td>
+            <td>{{ row.userscore}}</td>
+            <td>{{ row.num_seasons}}</td>
+            <td>{{ row.total_people_involved}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

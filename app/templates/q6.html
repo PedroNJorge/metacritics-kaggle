@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 6</title>
+</head>
+<body>
+    <h2>Top 5 shows with the most seasons</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Seasons</th>
+            <th>Userscore</th>
+        </tr>
+        {% for row in q6 %}
+        <tr>
+            <td>{{ row.title }}</td>
+            <td>{{ row.num_seasons }}</td>
+            <td>{{ row.userscore }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

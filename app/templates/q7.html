@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 7</title>
+</head>
+<body>
+    <h2>Top 20 pairs (director, actor) with more projects together</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Director</th>
+            <th>Actor</th>
+            <th>Shows together</th>
+        </tr>
+        {% for row in q7 %}
+        <tr>
+            <td>{{ row.director }}</td>
+            <td>{{ row.actor }}</td>
+            <td>{{ row.projects_together }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

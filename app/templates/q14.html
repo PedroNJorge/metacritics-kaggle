@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 14</title>
+</head>
+<body>
+    <h2>Show Quality vs Number of Seasons</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Seasons</th>
+            <th>Avg Score</th>
+            <th>Shows</th>
+            <th>Consistency</th>
+        </tr>
+        {% for row in q14 %}
+        <tr>
+            <td>{{ row.num_seasons }}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>{{ row.show_count }}</td>
+            <td>{{ row.metascore_cv_percent }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">← Back</a></p>
+</body>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 3</title>
+</head>
+<body>
+    <h2>Top 50 Shows with Score Discrepancies</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Rank</th>
+            <th>Title</th>
+            <th>Critic</th>
+            <th>User</th>
+            <th>Diff</th>
+            <th>Reliability</th>
+        </tr>
+        {% for row in q3 %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.metascore }}</td>
+            <td>{{ row.userscore }}</td>
+            <td>{{ "%.1f"|format(row.discrepancy) }}</td>
+            <td>{{ row.reliability }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

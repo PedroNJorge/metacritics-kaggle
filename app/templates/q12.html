@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 12</title>
+</head>
+<body>
+    <h2>Top 5 genre pairs</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Genre 1</th>
+            <th>Genre 2</th>
+            <th>Show Count</th>
+            <th>Average Metascore</th>
+            <th>Average Userscore</th>
+            <th>Metascore standard deviation</th>
+            <th>Userscore standard deviation</th>
+            
+        </tr>
+        {% for row in q12 %}
+        <tr>
+            <td>{{ row.genre1}}</td>
+            <td>{{ row.genre2 }}</td>
+            <td>{{ row.show_count}}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>{{ row.avg_userscore}}</td>
+            <td>{{ row.metascore_stddev }}</td>
+            <td>{{ row.userscore_stddev}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

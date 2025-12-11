@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 import re
+import math
 
 global DB, DB_FILE
 
@@ -11,6 +12,7 @@ DB = dict()
 def connect():
   global DB, DB_FILE
   c = sqlite3.connect(DB_FILE, check_same_thread=False)
+  c.create_function('sqrt', 1, math.sqrt)
   # print("connected", c)
   c.row_factory = sqlite3.Row
   DB['conn'] = c

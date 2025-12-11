@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center mb-4">Queries</h1>
+
+    <div class="row gy-4 mb-5">
+        {% for i in range(1, 16) %}
+        <div class="col-md-3">
+            <a href="/queries/{{ i }}" class="btn btn-primary btn-hover-secondary w-100">Query {{ i }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<style>
+    .btn-hover-secondary {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-hover-secondary:hover {
+        background-color: #6c757d !important; 
+        color: #fff !important; 
+    }
+
+    .img-fluid {
+        width: 1100px; 
+        margin-top: 0px; 
+        margin-left: -40px; 
+    }
+</style>
+
+{% endblock %}

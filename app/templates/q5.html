@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 5</title>
+</head>
+<body>
+    <h2>Top Writers/Directors (Same Shows)</h2>
+    
+    <table border="1">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Shows</th>
+            <th>Avg Score</th>
+            <th>Range</th>
+        </tr>
+        {% for row in q5 %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.shows_count }}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>{{ row.best_score }}-{{ row.worst_score }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

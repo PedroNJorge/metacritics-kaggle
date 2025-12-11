@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 13</title>
+</head>
+<body>
+    <h2>Top 20 Production Companies</h2>
+    <p>By quality consistency and highly-rated shows percentage</p>
+    
+    <table border="1">
+        <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th>Shows</th>
+            <th>Avg Score</th>
+            <th>Consistency</th>
+            <th>Top Rated</th>
+        </tr>
+        {% for row in q13 %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row.company }}</td>
+            <td>{{ row.total_shows }}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>
+                {% if row.metascore_cv_percent <= 15 %}
+                    High
+                {% elif row.metascore_cv_percent <= 25 %}
+                    Medium
+                {% else %}
+                    Low
+                {% endif %}
+            </td>
+            <td>{{ row.highly_rated_percent }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

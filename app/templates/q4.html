@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 4</title>
+</head>
+<body>
+    <h2>Top 10 Actors that were in more shows</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Total shows</th>
+        </tr>
+        {% for row in q4 %}
+        <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.num }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

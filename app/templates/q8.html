@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 8</title>
+</head>
+<body>
+    <h2>Best show per decade</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Decade</th>
+            <th>Release date</th>
+            <th>Title</th>
+            <th>Rating</th>
+            <th>Metascore</th>
+            <th>Userscore</th>
+        </tr>
+        {% for row in q8 %}
+        <tr>
+            <td>{{ row.decade}}</td>
+            <td>{{ row.releaseDate }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.rating}}</td>
+            <td>{{ row.metascore }}</td>
+            <td>{{ row.userscore }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

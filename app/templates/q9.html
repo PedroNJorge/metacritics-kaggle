@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 9</title>
+</head>
+<body>
+    <h2>Average score per genre</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Genre</th>
+            <th>Average metascore</th>
+            <th>Average userscore</th>
+            <th>Total shows</th>
+        </tr>
+        {% for row in q9 %}
+        <tr>
+            <td>{{ row.genre}}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>{{ row.avg_userscore }}</td>
+            <td>{{ row.num_shows}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

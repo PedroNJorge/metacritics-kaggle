@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 2</title>
+</head>
+<body>
+    <h2>Best & Worst Metascores by Genre</h2>
+    
+    <table border="1">
+        <tr>
+            <th>Genre</th>
+            <th>Title</th>
+            <th>Score</th>
+            <th>Type</th>
+        </tr>
+        {% for row in q2 %}
+        <tr>
+            <td>{{ row.genre_name }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.metascore }}</td>
+            <td>{{ row.rating_type }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/queries/">Back to Queries</a></p>
+</body>
+{% endblock %}

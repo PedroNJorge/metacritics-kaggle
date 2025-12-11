@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Query 1</title>
+</head>
+<body>
+    <h1>Top 10 Actors in Most Categories</h1>
+    
+    <table border="1">
+        <tr>
+            <th>Rank</th>
+            <th>Actor Name</th>
+            <th>Number of Genres</th>
+        </tr>
+        {% for row in q1 %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.num_genres }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p><a href="/">Back to Home</a></p>
+</body>
+{% endblock %}
