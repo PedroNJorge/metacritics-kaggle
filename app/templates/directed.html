@@ -8,7 +8,7 @@
     <thead>
         <tr>
             <th>Person</th>
-            <th>Shows Directed</th>
+            <th>Show Directed</th>
         </tr>
     </thead>
     <tbody>
@@ -18,7 +18,7 @@
                 <a href="/person/{{ d.person_id }}">{{ d.person_id }}</a>
             </td>
             <td>
-                <a href="/show/{{ d.show_id }}">{{ d.show_id }}</a>{% if not loop.last %}, {% endif %}
+                <a href="/show/{{ d.show_id }}">{{ d.show_id }}</a>{% if not loop.last %} {% endif %}
             </td>
         </tr>
         {% endfor %}

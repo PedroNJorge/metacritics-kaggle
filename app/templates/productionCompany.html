@@ -3,11 +3,33 @@
 {% block content %}
 <h1>Production companies</h1>
 <p>Page {{ page }} of {{ total_pages }} ({{ total }} total)</p>
+
+{% if erro %}
+<div class="alert alert-danger" role="alert">
+    {{ erro }}
+</div>
+{% endif %}
+
+{% if search_term %}
+<div class="alert alert-info" role="alert">
+    Showing results for: "<strong>{{ search_term }}</strong>"
+    <span class="ms-2">({{ total }} result{% if total != 1 %}s{% endif %})</span>
+</div>
+{% endif %}
+
 <form method="get" action="/productionCompany/" class="mb-4 d-flex align-items-center">
-    <label for="show" class="form-label me-2 mb-0">Get show:</label>
-    <input type="text" id="show" name="id" class="form-control me-2" placeholder="Id show here" style="max-width: 300px;">
+    <label for="productionCompany" class="form-label me-2 mb-0">Get Production Company:</label>
+    <input type="text" id="company" name="id" class="form-control me-2" placeholder="Company ID here" style="max-width: 300px;">
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
+<form method="get" action="/productionCompany/" class="mb-4 d-flex align-items-center">
+    <label for="productionCompany" class="form-label me-2 mb-0">Search by Name:</label>
+    <input type="text" id="company" name="company" class="form-control me-2" placeholder="Enter company name" style="max-width: 300px;">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+{% if companies %}
 <table class="table">
     <tr>
         <th>Id</th>
@@ -25,6 +47,14 @@
         </td>
     {% endfor %}
 </table>
+{% else %}
+{% if search_term or request.args.get('id') %}
+<div class="alert alert-warning" role="alert">
+    No production companies found matching your search.
+</div>
+{% endif %}
+{% endif %}
+
 
 <!-- Simple pagination -->
 <div class="pagination">

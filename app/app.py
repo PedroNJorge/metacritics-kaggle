@@ -65,10 +65,35 @@ def show():
                                               total = total,
                                               erro="Show Not found") 
 
+    show_title = request.args.get('title')
+    if show_title:
+        search = f"%{show_title}%"
+        matches = db.execute ('''
+            SELECT *
+            FROM show
+            WHERE LOWER(title) LIKE LOWER(?)
+            ORDER BY title
+        ''', [search]).fetchall()
+        if not matches: 
+            return render_template('show.html', shows = [],
+                                              page = 1,
+                                              total_pages = 0,
+                                              total = 0,
+                                              erro="Show Not found") 
+        if len(matches) == 1:
+            show = matches[0]
+            return redirect(f"/show/{show['id']}")
+        return render_template('show.html', shows = matches,
+                                                  page = 1,
+                                                  total_pages = 1,
+                                                  total = len(matches),
+                                                  search_term = show_title)        
+
     return render_template('show.html', shows = shows_list,
                                               page = page,
                                               total_pages = total_pages,
                                               total = total)        
+
 # Show info
 @APP.route('/show/<int:show_id>')
 def show_detail(show_id):
@@ -178,7 +203,33 @@ def person():
                                               page = page,
                                               total_pages = total_pages,
                                               total = total,
-                                              erro=" Person Not found") 
+                                              erro="Person Not found") 
+
+    person_name = request.args.get('name')
+    if person_name:
+        search = f"%{person_name}%"
+        matches = db.execute ('''
+            SELECT *
+            FROM person
+            WHERE LOWER(name) LIKE LOWER(?)
+            ORDER BY name
+        ''', [search]).fetchall()
+        if not matches: 
+            return render_template('person.html', people = [],
+                                              page = 1,
+                                              total_pages = 0,
+                                              total = 0,
+                                              erro="Person Not found") 
+        if len(matches) == 1:
+            person = matches[0]
+            return redirect(f"/person/{person['id']}")
+        return render_template('person.html', people = matches,
+                                                  page = 1,
+                                                  total_pages = 1,
+                                                  total = len(matches),
+                                                  search_term = person_name)        
+
+
 
     return render_template('person.html', people = people_list,
                                               page = page,
@@ -397,7 +448,32 @@ def company():
                                               page = page,
                                               total_pages = total_pages,
                                               total = total,
-                                              erro=" Production Company Not found")
+                                              erro="Production Company Not found")
+
+    company = request.args.get('company')
+    if company:
+        search = f"%{company}%"
+        matches = db.execute ('''
+            SELECT *
+            FROM productionCompany
+            WHERE LOWER(company) LIKE LOWER(?)
+            ORDER BY company
+        ''', [search]).fetchall()
+        if not matches: 
+            return render_template('productionCompany.html', companies = [],
+                                              page = 1,
+                                              total_pages = 0,
+                                              total = 0,
+                                              erro="Production Company Not found") 
+        if len(matches) == 1:
+            company = matches[0]
+            return redirect(f"/productionCompany/{company['id']}")
+        return render_template('productionCompany.html', companies = matches,
+                                                  page = 1,
+                                                  total_pages = 1,
+                                                  total = len(matches),
+                                                  search_term = company)        
+
 
     return render_template('productionCompany.html', companies = company_list,
                                                      page = page,

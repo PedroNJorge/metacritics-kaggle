@@ -3,11 +3,35 @@
 {% block content %}
 <h1>TV Shows & Movies</h1>
 <p>Page {{ page }} of {{ total_pages }} ({{ total }} total)</p>
+
+{% if erro %}
+<div class="alert alert-danger" role="alert">
+    {{ erro }}
+</div>
+{% endif %}
+
+{% if search_term %}
+<div class="alert alert-info" role="alert">
+    Showing results for: "<strong>{{ search_term }}</strong>"
+    <span class="ms-2">({{ total }} result{% if total != 1 %}s{% endif %})</span>
+</div>
+{% endif %}
+
+
+
 <form method="get" action="/show/" class="mb-4 d-flex align-items-center">
-    <label for="show" class="form-label me-2 mb-0">Get show:</label>
-    <input type="text" id="show" name="id" class="form-control me-2" placeholder="Id show here" style="max-width: 300px;">
+    <label for="show" class="form-label me-2 mb-0">Get Show:</label>
+    <input type="text" id="show" name="id" class="form-control me-2" placeholder="Show ID here" style="max-width: 300px;">
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
+<form method="get" action="/show/" class="mb-4 d-flex align-items-center">
+    <label for="show_title" class="form-label me-2 mb-0">Search by Title:</label>
+    <input type="text" id="show_title" name="title" class="form-control me-2" placeholder="Enter show title (partial matches)" style="max-width: 300px;">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+{% if shows %}
 <table class="table">
     <tr>
         <th>Id</th>
@@ -109,6 +133,13 @@
     </tr>
     {% endfor %}
 </table>
+{% else %}
+{% if search_term or request.args.get('id') %}
+<div class="alert alert-warning" role="alert">
+    No shows found matching your search.
+</div>
+{% endif %}
+{% endif %}
 
 <!-- Simple pagination -->
 <div class="pagination">
