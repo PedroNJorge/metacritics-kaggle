@@ -3,7 +3,11 @@
 {% block content %}
 <h1>TV Shows & Movies</h1>
 <p>Page {{ page }} of {{ total_pages }} ({{ total }} total)</p>
-
+<form method="get" action="/show/" class="mb-4 d-flex align-items-center">
+    <label for="show" class="form-label me-2 mb-0">Get show:</label>
+    <input type="text" id="show" name="id" class="form-control me-2" placeholder="Id show here" style="max-width: 300px;">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
 <table class="table">
     <tr>
         <th>Id</th>

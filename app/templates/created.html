@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for c in created %}
+        {% for c in creator %}
         <tr>
             <td>
                 <a href="/person/{{ c.person_id }}">{{ c.person_id }}</a>
@@ -28,13 +28,13 @@
 <!-- Pagination -->
 <div class="pagination">
     {% if page > 1 %}
-    <a href="/acted/?page={{ page - 1 }}">&laquo; Previous</a>
+    <a href="/created/?page={{ page - 1 }}">&laquo; Previous</a>
     {% endif %}
     
     <span>Page {{ page }} of {{ total_pages }}</span>
     
     {% if page < total_pages %}
-    <a href="/acted/?page={{ page + 1 }}">Next &raquo;</a>
+    <a href="/created/?page={{ page + 1 }}">Next &raquo;</a>
     {% endif %}
 </div>
 <style>

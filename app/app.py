@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
-from flask import render_template, Flask, request
+from flask import render_template, Flask, request, redirect
 import logging
 import db
 
@@ -29,42 +29,6 @@ def index():
     ''').fetchone()
     return render_template('index.html', stats = stats)
 
-# Search a show by its title
-@APP.route('/search')
-def search():
-    query = request.args.get('q', '')
-    page = request.args.get('page', 1, type = int)
-    per_page = 20
-    offset = (page - 1) * per_page
-
-    if query:
-        count_result = db.execute ('''
-            SELECT COUNT(*) AS total
-            FROM show
-            WHERE title LIKE ?
-        ''', ('%' + query + '%',)).fetchone()
-        total = count_result['total']
-
-        result = db.execute('''
-            SELECT id, title, releaseDate, rating, metascore,
-                userscore, num_seasons
-            FROM show
-            WHERE title LIKE ?
-            ORDER BY title
-            LIMIT ? OFFSET ?
-        ''',('%' + query + '%', per_page, offset)).fetchall()  
-        total_pages = (total + per_page - 1) // per_page
-
-    else: 
-        results = []
-        total = 0
-        total_pages = 0
-    return render_template ('search.html', query = query,
-                                           results = results,
-                                           page = page,
-                                           total_pages = total_pages,
-                                           total = total)
-
 # Show table
 @APP.route('/show/')
 def show():
@@ -85,11 +49,26 @@ def show():
     ''', (per_page, offset)).fetchall()
     total_pages = (total + per_page - 1) // per_page
 
+    id_show = request.args.get('id')
+    if id_show:
+        show = db.execute ('''
+            SELECT id, title
+            FROM show
+            WHERE id = ?
+        ''', [id_show]).fetchone()
+        if show:
+            return redirect(f"/show/{show['id']}")
+        else: 
+            return render_template('show.html', shows = shows_list,
+                                              page = page,
+                                              total_pages = total_pages,
+                                              total = total,
+                                              erro="Show Not found") 
+
     return render_template('show.html', shows = shows_list,
                                               page = page,
                                               total_pages = total_pages,
-                                              total = total)
-
+                                              total = total)        
 # Show info
 @APP.route('/show/<int:show_id>')
 def show_detail(show_id):
@@ -184,6 +163,22 @@ def person():
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
     total_pages = (total + per_page - 1) // per_page
+
+    id_person = request.args.get('id')
+    if id_person:
+        person = db.execute ('''
+            SELECT id, name
+            FROM person
+            WHERE id = ?
+        ''', [id_person]).fetchone()
+        if person:
+            return redirect(f"/person/{person['id']}")
+        else: 
+            return render_template('person.html', people = people_list,
+                                              page = page,
+                                              total_pages = total_pages,
+                                              total = total,
+                                              erro=" Person Not found") 
 
     return render_template('person.html', people = people_list,
                                               page = page,
@@ -386,6 +381,23 @@ def company():
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
     total_pages = (total + per_page - 1) // per_page
+
+    id_comp = request.args.get('id')
+    if id_comp:
+        comp = db.execute ('''
+            SELECT id, company
+            FROM productionCompany
+            WHERE id = ?
+        ''', [id_comp]).fetchone()
+        if comp:
+            return redirect(f"/productionCompany/{comp['id']}")
+        
+        else: 
+            return render_template('productionCompany.html', companies = company_list,
+                                              page = page,
+                                              total_pages = total_pages,
+                                              total = total,
+                                              erro=" Production Company Not found")
 
     return render_template('productionCompany.html', companies = company_list,
                                                      page = page,
