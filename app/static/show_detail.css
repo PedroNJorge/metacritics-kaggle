@@ -1,0 +1,202 @@
+/* Show Detail Page Styles */
+
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.lead {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #718096;
+    font-style: italic;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f7fafc;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+/* Row Layout */
+.row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.col-md-8,
+.col-md-4 {
+    background: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Info Paragraphs */
+p {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+p strong {
+    color: #667eea;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    display: inline-block;
+    min-width: 100px;
+}
+
+/* Headings */
+h4 {
+    color: #2d3748;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid #667eea;
+}
+
+h5 {
+    color: #667eea;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Scores Section */
+.mb-3 {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mb-3 strong {
+    display: block;
+    color: #667eea;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Horizontal Rule */
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #667eea, transparent);
+    margin: 2.5rem 0;
+}
+
+/* Details Grid */
+.row:last-of-type {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.col-md-3 {
+    background: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.col-md-3 div {
+    margin-bottom: 0.8rem;
+}
+
+.col-md-3 a {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background: white;
+    border-radius: 6px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.col-md-3 a:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateX(5px);
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Badge Styling */
+.badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+/* Back Button */
+.mt-4 {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: #718096;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(113, 128, 150, 0.3);
+}
+
+.btn-secondary:hover {
+    background: #4a5568;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(74, 85, 104, 0.4);
+}
+
+/* Small Text */
+small {
+    display: block;
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1.1rem;
+    }
+    
+    .row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .row:last-of-type {
+        grid-template-columns: 1fr;
+    }
+}

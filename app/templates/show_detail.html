@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<head>
+    <link rel="stylesheet" href="/static/show_detail.css">
+</head>
+
+
 <h1>{{ show.title }}</h1>
 {% if show.tagline %}<p class="lead"><em>"{{ show.tagline }}"</em></p>{% endif %}
 
@@ -29,7 +34,7 @@
             {% endif %}
         </div>
         
-        <div>
+        <div class="mb-3">
             <strong>User Score:</strong>
             {% if show.userscore is not none %}
             {{ show.userscore }} ({{ show.userscore_sentiment }})<br>

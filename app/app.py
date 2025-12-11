@@ -184,6 +184,7 @@ def person():
         LEFT JOIN wrote w ON p.id = w.person_id
         LEFT JOIN created c ON p.id = c.person_id
         GROUP BY p.id, p.name
+        HAVING p.name != ''
         ORDER BY p.name
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
@@ -209,16 +210,25 @@ def person():
     if person_name:
         search = f"%{person_name}%"
         matches = db.execute ('''
-            SELECT *
-            FROM person
+            SELECT p.*,
+                COUNT(DISTINCT a.show_id) as acted_count,
+                COUNT(DISTINCT d.show_id) as directed_count,
+                COUNT(DISTINCT w.show_id) as wrote_count,
+                COUNT(DISTINCT c.show_id) as created_count
+            FROM person p
+            LEFT JOIN acted a ON p.id = a.person_id
+            LEFT JOIN directed d ON p.id = d.person_id
+            LEFT JOIN wrote w ON p.id = w.person_id
+            LEFT JOIN created c ON p.id = c.person_id
             WHERE LOWER(name) LIKE LOWER(?)
-            ORDER BY name
+            GROUP BY p.id, p.name
+            ORDER BY p.name
         ''', [search]).fetchall()
         if not matches: 
-            return render_template('person.html', people = [],
-                                              page = 1,
-                                              total_pages = 0,
-                                              total = 0,
+            return render_template('person.html', people = people_list,
+                                              page = page,
+                                              total_pages = total_pages,
+                                              total = total,
                                               erro="Person Not found") 
         if len(matches) == 1:
             person = matches[0]
@@ -428,6 +438,7 @@ def company():
     company_list = db.execute('''
         SELECT *
         FROM productionCompany
+        WHERE company != ''
         ORDER BY company
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
@@ -439,6 +450,7 @@ def company():
             SELECT id, company
             FROM productionCompany
             WHERE id = ?
+            AND company != ''
         ''', [id_comp]).fetchone()
         if comp:
             return redirect(f"/productionCompany/{comp['id']}")
@@ -457,13 +469,14 @@ def company():
             SELECT *
             FROM productionCompany
             WHERE LOWER(company) LIKE LOWER(?)
+            AND company != ''
             ORDER BY company
         ''', [search]).fetchall()
         if not matches: 
-            return render_template('productionCompany.html', companies = [],
-                                              page = 1,
-                                              total_pages = 0,
-                                              total = 0,
+            return render_template('productionCompany.html', companies = company_list,
+                                              page = page,
+                                              total_pages = total_pages,
+                                              total = total,
                                               erro="Production Company Not found") 
         if len(matches) == 1:
             company = matches[0]
@@ -668,7 +681,7 @@ def query4():
 
 @APP.route('/queries/5/')
 def query5():
-    # Top 20 People who wrote and directed the same show
+    # Top 30 People who wrote and directed the same show
     q5 = db.execute('''
         SELECT 
             p.name,

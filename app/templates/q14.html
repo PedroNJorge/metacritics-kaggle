@@ -2,16 +2,18 @@
 {% block content %}
 <head>
     <title>Query 14</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
     <h2>Show Quality vs Number of Seasons</h2>
+    <p>*CV: Coefficient of Variation of MetaScore</p>
     
     <table border="1">
         <tr>
             <th>Seasons</th>
-            <th>Avg Score</th>
-            <th>Shows</th>
-            <th>Consistency</th>
+            <th>Average MetaScore</th>
+            <th>Total Shows</th>
+            <th>Consistency (CV)</th>
         </tr>
         {% for row in q14 %}
         <tr>

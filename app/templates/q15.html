@@ -2,35 +2,40 @@
 {% block content %}
 <head>
     <title>Query 15</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
-    <h2>Decade Comparison</h2>
+    <h1>Decade Comparison</h1>
     
     <table border="1">
         <tr>
             <th>Decade</th>
-            <th>Critic</th>
-            <th>User</th>
-            <th>Gap</th>
-            <th>Shows</th>
+            <th>Total Shows</th>
+            <th>Average MetaScore</th>
+            <th>MetaScore standard deviation</th>
+            <th>MetaScore Consistency (CV)</th>
+            <th>Average UserScore</th>
+            <th>UserScore standard deviationv</th>
+            <th>UserScore Consistency (CV)</th>
+            <th>Average Seasons</th>
+            <th>Average Duration (min)</th>
         </tr>
         {% for row in q15 %}
         <tr>
             <td>{{ row.decade }}</td>
-            <td>{{ row.avg_metascore }}</td>
-            <td>{{ row.avg_userscore }}</td>
-            <td>
-                {% set gap = row.avg_metascore - row.avg_userscore %}
-                <span>
-                    {{ "%.1f"|format(gap) }}
-                </span>
-            </td>
             <td>{{ row.total_shows }}</td>
+            <td>{{ row.avg_metascore }}</td>
+            <td>{{ row.metascore_stddev }}</td>
+            <td>{{ row.metascore_cv_percent }}%</td>
+            <td>{{ row.avg_userscore }}</td>
+            <td>{{ row.userscore_stddev }}</td>
+            <td>{{ row.userscore_cv_percent }}</td>
+            <td>{{ row.avg_seasons }}</td>
+            <td>{{ row.avg_duration }}</td>
         </tr>
         {% endfor %}
     </table>
     
-    <p><em>Positive gap = critics rate higher, Negative gap = users rate higher</em></p>
     <p><a href="/queries/"> Back to queries </a></p>
 </body>
 {% endblock %}

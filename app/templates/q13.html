@@ -2,18 +2,21 @@
 {% block content %}
 <head>
     <title>Query 13</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
     <h2>Top 20 Production Companies</h2>
-    <p>By quality consistency and highly-rated shows percentage</p>
+    <p>*CV: Coefficient of Variation of MetaScore</p>
+    <p>*Top Rated: percentage of 'Universal acclaim' shows (MetaScore &gt 80)</p>
     
     <table border="1">
         <tr>
-            <th>#</th>
+            <th>Rank</th>
             <th>Company</th>
-            <th>Shows</th>
-            <th>Avg Score</th>
-            <th>Consistency</th>
+            <th>Total Shows</th>
+            <th>Average MetaScore</th>
+            <th>MetaScore standard deviation</th>
+            <th>Consistency (CV)</th>
             <th>Top Rated</th>
         </tr>
         {% for row in q13 %}
@@ -22,15 +25,8 @@
             <td>{{ row.company }}</td>
             <td>{{ row.total_shows }}</td>
             <td>{{ row.avg_metascore }}</td>
-            <td>
-                {% if row.metascore_cv_percent <= 15 %}
-                    High
-                {% elif row.metascore_cv_percent <= 25 %}
-                    Medium
-                {% else %}
-                    Low
-                {% endif %}
-            </td>
+            <td>{{ row.metascore_stddev }}</td>
+            <td>{{ row.metascore_cv_percent }}%</td>
             <td>{{ row.highly_rated_percent }}%</td>
         </tr>
         {% endfor %}

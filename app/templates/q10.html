@@ -2,6 +2,7 @@
 {% block content %}
 <head>
     <title>Query 10</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
     <h2>Top 5 shows with the biggest working crew</h2>
@@ -10,10 +11,14 @@
         <tr>
             <th>Title</th>
             <th>Release Date</th>
-            <th>Userscore</th>
             <th>Metascore</th>
+            <th>Userscore</th>
             <th>Seasons</th>
             <th>People involved</th>
+            <th>Actors</th>
+            <th>Directors</th>
+            <th>Writers</th>
+            <th>Creators</th>
         </tr>
         {% for row in q10 %}
         <tr>
@@ -23,6 +28,10 @@
             <td>{{ row.userscore}}</td>
             <td>{{ row.num_seasons}}</td>
             <td>{{ row.total_people_involved}}</td>
+            <td>{{ row.actors}}</td>
+            <td>{{ row.directors}}</td>
+            <td>{{ row.writers}}</td>
+            <td>{{ row.creators}}</td>
         </tr>
         {% endfor %}
     </table>

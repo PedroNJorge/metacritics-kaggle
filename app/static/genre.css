@@ -1,0 +1,121 @@
+/* Genre and Simple List Pages Styles */
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #718096;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.table td {
+    text-align: center;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table td a {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+.table td a:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: #f7fafc;
+}
+
+/* Pagination */
+.pagination {
+    margin: 2rem 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pagination a {
+    padding: 0.7rem 1.5rem;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #667eea;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.pagination a:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.pagination span {
+    font-weight: 700;
+    color: #2d3748;
+    padding: 0.7rem 1.5rem;
+    background: #f7fafc;
+    border-radius: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 1rem;
+    }
+    
+    .table td a {
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+    }
+}

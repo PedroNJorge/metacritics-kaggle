@@ -2,6 +2,7 @@
 {% block content %}
 <head>
     <title>Query 11</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
     <h2>Most popular genre at each decade</h2>
@@ -11,7 +12,7 @@
             <th>Decade</th>
             <th>Genre</th>
             <th>Average Metascore</th>
-            <th>Show Count</th>
+            <th>Total Shows</th>
         </tr>
         {% for row in q11 %}
         <tr>

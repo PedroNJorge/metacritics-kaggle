@@ -2,17 +2,23 @@
 {% block content %}
 <head>
     <title>Query 3</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
-    <h2>Top 50 Shows with Score Discrepancies</h2>
+    <h2>Top 50 Shows with the Biggest Score Discrepancies</h2>
+    <p class="text-muted">
+    *Weighted Discrepancy = ABS(metascore - userscore) * MIN(1.0, userscore_count / 20.0) * MIN(1.0, metascore_count / 10.0)
+    </p>
     
     <table border="1">
         <tr>
             <th>Rank</th>
             <th>Title</th>
-            <th>Critic</th>
-            <th>User</th>
-            <th>Diff</th>
+            <th>MetaScore</th>
+            <th>Num MetaReviews</th>
+            <th>UserScore</th>
+            <th>Num UserReviews</th>
+            <th>Weighted Discrepancy</th>
             <th>Reliability</th>
         </tr>
         {% for row in q3 %}
@@ -20,8 +26,10 @@
             <td>{{ loop.index }}</td>
             <td>{{ row.title }}</td>
             <td>{{ row.metascore }}</td>
+            <td>{{ row.metascore_count }}</td>
             <td>{{ row.userscore }}</td>
-            <td>{{ "%.1f"|format(row.discrepancy) }}</td>
+            <td>{{ row.userscore_count }}</td>
+            <td>{{ "%.1f"|format(row.weighted_discrepancy) }}</td>
             <td>{{ row.reliability }}</td>
         </tr>
         {% endfor %}

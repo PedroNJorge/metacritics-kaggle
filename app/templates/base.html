@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>TV Shows Metacritcs</title>
+    <link rel="stylesheet" href="/static/base.css">
 </head>
 <body>
     <header>
@@ -10,13 +11,13 @@
             <a href="/" class="btn {% if page == 'home' %}btn-primary{% else %}btn-secondary{% endif %}">Home</a>
             <a href="/show" class="btn {% if page == 'show' %}btn-primary{% else %}btn-secondary{% endif %}">Shows</a>
             <a href="/person" class="btn {% if page == 'person' %}btn-primary{% else %}btn-secondary{% endif %}">People</a>
-            <a href="/acted" class="btn {% if page == 'acted' %}btn-primary{% else %}btn-secondary{% endif %}">Acted</a>
-            <a href="/wrote" class="btn {% if page == 'wrote' %}btn-primary{% else %}btn-secondary{% endif %}">Wrote</a>
-            <a href="/directed" class="btn {% if page == 'directed' %}btn-primary{% else %}btn-secondary{% endif %}">Directed</a>
-            <a href="/created" class="btn {% if page == 'created' %}btn-primary{% else %}btn-secondary{% endif %}">Created</a>
             <a href="/productionCompany" class="btn {% if page == 'productionCompany' %}btn-primary{% else %}btn-secondary{% endif %}">Production companies</a>
-            <a href="/producedBy" class="btn {% if page == 'producedBy' %}btn-primary{% else %}btn-secondary{% endif %}">Produced By</a>
             <a href="/genre" class="btn {% if page == 'genres' %}btn-primary{% else %}btn-secondary{% endif %}">Genres</a>
+            <a href="/producedBy" class="btn {% if page == 'producedBy' %}btn-primary{% else %}btn-secondary{% endif %}">Produced By</a>
+            <a href="/acted" class="btn {% if page == 'acted' %}btn-primary{% else %}btn-secondary{% endif %}">Acted</a>
+            <a href="/directed" class="btn {% if page == 'directed' %}btn-primary{% else %}btn-secondary{% endif %}">Directed</a>
+            <a href="/wrote" class="btn {% if page == 'wrote' %}btn-primary{% else %}btn-secondary{% endif %}">Wrote</a>
+            <a href="/created" class="btn {% if page == 'created' %}btn-primary{% else %}btn-secondary{% endif %}">Created</a>
             <a href="/queries" class="btn {% if page == 'queries' %}btn-primary{% else %}btn-secondary{% endif %}">Queries</a>
         </nav>
     </header>

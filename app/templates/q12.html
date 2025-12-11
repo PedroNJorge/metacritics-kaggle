@@ -2,6 +2,7 @@
 {% block content %}
 <head>
     <title>Query 12</title>
+    <link rel="stylesheet" href="/static/queries.css">
 </head>
 <body>
     <h2>Top 5 genre pairs</h2>
@@ -10,10 +11,10 @@
         <tr>
             <th>Genre 1</th>
             <th>Genre 2</th>
-            <th>Show Count</th>
+            <th>Total Shows</th>
             <th>Average Metascore</th>
-            <th>Average Userscore</th>
             <th>Metascore standard deviation</th>
+            <th>Average Userscore</th>
             <th>Userscore standard deviation</th>
             
         </tr>
@@ -23,8 +24,8 @@
             <td>{{ row.genre2 }}</td>
             <td>{{ row.show_count}}</td>
             <td>{{ row.avg_metascore }}</td>
-            <td>{{ row.avg_userscore}}</td>
             <td>{{ row.metascore_stddev }}</td>
+            <td>{{ row.avg_userscore}}</td>
             <td>{{ row.userscore_stddev}}</td>
         </tr>
         {% endfor %}

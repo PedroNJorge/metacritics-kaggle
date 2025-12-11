@@ -1,0 +1,154 @@
+/* Relationship Tables Styles (acted, wrote, directed, created) */
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #718096;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 2rem auto;
+    font-size: 1rem;
+}
+
+.table thead {
+    background: #4f46e5
+    // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.table th {
+    color: blue;
+    padding: 1.2rem;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+}
+
+.table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: linear-gradient(to right, #f7fafc, #edf2f7);
+    transform: translateX(5px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Link Styling */
+.table td a {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.table td a:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Different colors for person vs show links */
+.table td:first-child a {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+}
+
+.table td:first-child a:hover {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.5);
+}
+
+.table td:last-child a {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.table td:last-child a:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+}
+
+/* Pagination */
+.pagination {
+    margin: 2rem 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pagination a {
+    padding: 0.7rem 1.5rem;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #667eea;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.pagination a:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.pagination span {
+    font-weight: 700;
+    color: #2d3748;
+    padding: 0.7rem 1.5rem;
+    background: #f7fafc;
+    border-radius: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.8rem 0.5rem;
+    }
+    
+    .table td a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}

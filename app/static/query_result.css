@@ -1,0 +1,186 @@
+/* Query Result Pages Styles (q1.html - q15.html) */
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #2d3748;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+table th {
+    padding: 1.2rem;
+    text-align: left;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    border: none;
+}
+
+table td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #2d3748;
+    font-size: 1rem;
+}
+
+table tbody tr {
+    transition: all 0.3s ease;
+}
+
+table tbody tr:hover {
+    background: linear-gradient(to right, #f7fafc, #edf2f7);
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Rank Column Styling */
+table td:first-child {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #667eea;
+    text-align: center;
+    width: 80px;
+}
+
+/* Top 3 Ranks Special Styling */
+table tbody tr:nth-child(1) td:first-child {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #000;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+}
+
+table tbody tr:nth-child(2) td:first-child {
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    color: #000;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(192, 192, 192, 0.5);
+}
+
+table tbody tr:nth-child(3) td:first-child {
+    background: linear-gradient(135deg, #cd7f32, #e8a87c);
+    color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(205, 127, 50, 0.5);
+}
+
+/* Name/Title Column */
+table td:nth-child(2) {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2d3748;
+}
+
+/* Count/Score Column */
+table td:nth-child(3) {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #667eea;
+    text-align: center;
+}
+
+/* Back Link */
+p {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+p a {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+p a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Additional styling for different column counts */
+table td:nth-child(4),
+table td:nth-child(5),
+table td:nth-child(6) {
+    text-align: center;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    table {
+        font-size: 0.9rem;
+    }
+    
+    table th,
+    table td {
+        padding: 0.8rem;
+    }
+    
+    table td:first-child {
+        font-size: 1.1rem;
+    }
+    
+    table tbody tr:nth-child(1) td:first-child,
+    table tbody tr:nth-child(2) td:first-child,
+    table tbody tr:nth-child(3) td:first-child {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}

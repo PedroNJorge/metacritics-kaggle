@@ -1,0 +1,153 @@
+/* Person Page Specific Styles */
+
+h1 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #718096;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Search Forms */
+form {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Table Styling */
+.table {
+    font-size: 0.95rem;
+}
+
+.table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table td:nth-child(1) {
+    font-weight: 600;
+}
+
+.table td:nth-child(2) {
+    text-align: left;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1.05rem;
+}
+
+/* Person ID Links */
+.table td:first-child a {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.table td:first-child a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Count Columns */
+.table td:nth-child(3),
+.table td:nth-child(4),
+.table td:nth-child(5),
+.table td:nth-child(6) {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* Total Shows Column */
+.table td:nth-child(7) strong {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+}
+
+/* Hover Effects */
+.table tbody tr:hover {
+    background: linear-gradient(to right, #f7fafc, #edf2f7);
+    transform: translateX(5px);
+}
+
+/* Pagination */
+.pagination {
+    background: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.pagination a {
+    background: white;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+}
+
+.pagination a:hover {
+    background: #667eea;
+    color: white;
+}
+
+.pagination span {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+/* Badge Styling */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.85rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.7rem 0.5rem;
+    }
+    
+    .table td:nth-child(2) {
+        font-size: 0.95rem;
+    }
+}
