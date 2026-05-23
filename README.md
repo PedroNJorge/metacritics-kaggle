@@ -63,30 +63,11 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
-### 2. Create a virtual environment (recommended)
+### 2. Create and use conda environment
 
 ```bash
-python -m venv venv
-```
-
-Activate the environment:
-
-**Windows**
-
-```bash
-venv\Scripts\activate
-```
-
-**macOS / Linux**
-
-```bash
-source venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install flask
+conda env create -f environment.yml
+conda activate metacritics
 ```
 
 ## Running the Application
